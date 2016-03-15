@@ -31,26 +31,26 @@
             <!--BOX HEADER END-->
 
 
-            <form id="form_1">
+            <form id="form_1" method="post" enctype="multipart/form-data" autocomplete="off">
 
             <!--BOX BODY START-->
               <div class="box-body">
 
-                <input type="hidden" id="form_1_token" value="{{ csrf_token() }}">
+                <input type="hidden" id="form_1_token" name="_token" value="{{ csrf_token() }}">
 
                 <div class="form-group">
                   <label>NIP</label>
-                  <input type="text" class="form-control" id="form_1_nip" placeholder="nip" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip">
                 </div>
 
                 <div class="form-group">
                   <label>Full Name</label>
-                  <input type="text" class="form-control" id="form_1_nama_lengkap" placeholder="full name" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_nama_lengkap" name="nama_lengkap" placeholder="full name">
                 </div>
 
                 <div class="form-group">
                   <label>Gender</label>
-                  <select class="form-control" id="form_1_jenis_kelamin" placeholder="gender">
+                  <select class="form-control" id="form_1_jenis_kelamin" name="jenis_kelamin" placeholder="gender">
                     <option value="PRIA">Male</option>
                     <option value="WANITA">Female</option>
                   </select>
@@ -58,22 +58,22 @@
 
                 <div class="form-group">
                   <label>Telephone Number</label>
-                  <input type="text" class="form-control" id="form_1_no_telp" placeholder="telephone number" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_no_telp" name="no_telp" placeholder="telephone number">
                 </div>
 
                 <div class="form-group">
                   <label>Cellphone Number</label>
-                  <input type="text" class="form-control" id="form_1_no_hp" placeholder="cellphone number" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_no_hp" name="no_hp" placeholder="cellphone number">
                 </div>
 
                 <div class="form-group">
                   <label>Email Address</label>
-                  <input type="email" class="form-control" id="form_1_email" placeholder="email address" autocomplete="off" onChange="javascript:this.value=this.value.toLowerCase();">
+                  <input type="email" class="form-control" id="form_1_email" name="email" placeholder="email address" autocomplete="off" onChange="javascript:this.value=this.value.toLowerCase();">
                 </div>
 
                 <div class="form-group">
                   <label>Marital Status</label>
-                  <select class="form-control" id="form_1_status_pernikahan" placeholder="marital status">
+                  <select class="form-control" id="form_1_status_pernikahan" name="status_pernikahan" placeholder="marital status">
                     <option value="TK">Not Married</option>
                     <option value="K0">Married, 0 children</option>
                     <option value="K1">Married, 1 children</option>
@@ -84,7 +84,7 @@
 
                 <div class="form-group">
                   <label>Nationality</label>
-                  <select class="form-control" id="form_1_kewarganegaraan" placeholder="nationality">
+                  <select class="form-control" id="form_1_kewarganegaraan" name="kewarganegaraan" placeholder="nationality">
                     <option value="INDONESIA">Indonesia (WNI)</option>
                     <option value="NON-INDONESIA">Foreign (WNA)</option>
                   </select>
@@ -92,17 +92,17 @@
 
                 <div class="form-group">
                   <label>Residence ID number (KTP)</label>
-                  <input type="text" class="form-control" id="form_1_no_ktp" placeholder="residence id number (ktp)" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_no_ktp" name="no_ktp" placeholder="residence id number (ktp)" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                   <label>Address</label>
-                  <textarea class="form-control" id="form_1_alamat" rows="3" placeholder="address"></textarea>
+                  <textarea class="form-control" id="form_1_alamat" name="alamat" rows="3" placeholder="address"></textarea>
                 </div>
 
                 <div class="form-group">
                   <label>Province (Provinsi)</label>
-                  <select class="form-control" id="form_1_provinsi" placeholder="province (provinsi)">
+                  <select class="form-control" id="form_1_provinsi" name="provinsi" placeholder="province (provinsi)">
                     <option value=""></option>
                     @foreach ($results_2 as $result_2)
                     <option value="{{ $result_2->id }}">{{ $result_2->id }}. {{ $result_2->name }}</option>
@@ -113,7 +113,7 @@
                 <div id="form_1_content_kota">
                   <div class="form-group">
                     <label>City (Kota)</label>
-                    <select class="form-control" id="form_1_kota" placeholder="city (kota)">
+                    <select class="form-control" id="form_1_kota" name="kota" placeholder="city (kota)">
                       <option value=""></option>
                     </select>
                   </div>
@@ -121,17 +121,17 @@
 
                 <div class="form-group">
                   <label>Postal Code</label>
-                  <input type="text" class="form-control" id="form_1_kode_pos" placeholder="postal code" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_kode_pos" name="kode_pos" placeholder="postal code" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                   <label>Tribe</label>
-                  <input type="text" class="form-control" id="form_1_suku" placeholder="tribe" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_suku" name="suku" placeholder="tribe" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                   <label>Able to Read?</label>
-                  <select class="form-control" id="form_1_literasi_membaca" placeholder="able to read?">
+                  <select class="form-control" id="form_1_literasi_membaca" name="literasi_membaca" placeholder="able to read?">
                     <option value="YA">Yes</option>
                     <option value="TIDAK">No</option>
                   </select>
@@ -139,15 +139,15 @@
 
                 <div class="form-group">
                   <label>Able to Write?</label>
-                  <select class="form-control" id="form_1_literasi_menulis" placeholder="able to write?">
-                    <option value="Y">Yes</option>
-                    <option value="T">No</option>
+                  <select class="form-control" id="form_1_literasi_menulis" name="literasi_menulis" placeholder="able to write?">
+                    <option value="YA">Yes</option>
+                    <option value="TIDAK">No</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label>Highest Education</label>
-                  <select class="form-control" id="form_1_pendidikan" placeholder="highest education">
+                  <select class="form-control" id="form_1_pendidikan" name="pendidikan" placeholder="highest education">
                     <option value="TIDAK SEKOLAH">Never Went to School</option>
                     <option value="SD">Elementary School (SD)</option>
                     <option value="SMP">Middle School (SMP)</option>
@@ -161,27 +161,27 @@
 
                 <div class="form-group">
                   <label>Sickness History</label>
-                  <textarea class="form-control" id="form_1_riwayat_penyakit" rows="3" placeholder="sickness history"></textarea>
+                  <textarea class="form-control" id="form_1_riwayat_penyakit" name="riwayat_penyakit" rows="3" placeholder="sickness history"></textarea>
                 </div>
 
                 <div class="form-group">
                   <label>BPJS Health</label>
-                  <input type="text" class="form-control" id="form_1_bpjs_kesehatan" placeholder="bpjs health" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_bpjs_kesehatan" name="bpjs_kesehatan" placeholder="bpjs health" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                   <label>BPJS Employment</label>
-                  <input type="text" class="form-control" id="form_1_bpjs_ketenagakerjaan" placeholder="bpjs employment" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_bpjs_ketenagakerjaan" name="bpjs_ketenagakerjaan" placeholder="bpjs employment" autocomplete="off">
                 </div>
 
                 <div class="form-group ">
                   <label>Insurance</label>
-                  <input type="text" class="form-control" id="form_1_asurasi" placeholder="insurance" autocomplete="off">
+                  <input type="text" class="form-control" id="form_1_asurasi" name="asurasi" placeholder="insurance" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                   <label>Position Type</label>
-                  <select class="form-control" id="form_1_jenis_jabatan" placeholder="position type">
+                  <select class="form-control" id="form_1_jenis_jabatan" name="jenis_jabatan" placeholder="position type">
                     <option value=""></option>
                     @foreach ($results as $result)
                     <option value="{{ $result->kode_jabatan}}">{{ $result->kode_jabatan }}. {{ $result->nama_jabatan }}</option>
@@ -192,10 +192,16 @@
                 <div id="form_1_content_jenis_divisi">
                   <div class="form-group">
                     <label>Division Type</label>
-                    <select class="form-control" id="form_1_jenis_divisi" placeholder="division type">
+                    <select class="form-control" id="form_1_jenis_divisi" name="jenis_divisi" placeholder="division type">
                       <option value=""></option>
                     </select>
                   </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Profile Picture</label>
+                  <input type="file" id="form_1_picture" name="picture">
+                  <p class="help-block">Profile picture in JPEG format.</p>
                 </div>
 
               </div>
@@ -247,54 +253,37 @@
 <script>
 $(document).ready(function(){
 
-	$("#form_1").submit(function(event)
-	{
-		$("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
-		$("#form_1_button_submit").prop('disabled', true);
-		$.post("/system/UserRegister",
-			{
-				_token: $("#form_1_token").val(),
-				nip: $("#form_1_nip").val(),
-				nama_lengkap: $("#form_1_nama_lengkap").val(),
-				jenis_kelamin: $("#form_1_jenis_kelamin").val(),
-				no_telp: $("#form_1_no_telp").val(),
-				no_hp: $("#form_1_no_hp").val(),
-				email: $("#form_1_email").val(),
-				status_pernikahan: $("#form_1_status_pernikahan").val(),
-				kewarganegaraan: $("#form_1_kewarganegaraan").val(),
-				no_ktp: $("#form_1_no_ktp").val(),
-				alamat: $("#form_1_alamat").val(),
-				provinsi: $("#form_1_provinsi").val(),
-				kota: $("#form_1_kota").val(),
-				kode_pos: $("#form_1_kode_pos").val(),
-				suku: $("#form_1_suku").val(),
-				literasi_membaca: $("#form_1_literasi_membaca").val(),
-				literasi_menulis: $("#form_1_literasi_menulis").val(),
-				pendidikan: $("#form_1_pendidikan").val(),
-				riwayat_penyakit: $("#form_1_riwayat_penyakit").val(),
-				bpjs_kesehatan: $("#form_1_bpjs_kesehatan").val(),
-				bpjs_ketenagakerjaan: $("#form_1_bpjs_ketenagakerjaan").val(),
-				asurasi: $("#form_1_asurasi").val(),
-				jenis_jabatan: $("#form_1_jenis_jabatan").val(),
-				jenis_divisi: $("#form_1_jenis_divisi").val(),
-			},
-		function(data,status){
-			if (data == 'OK')
-			{
-				$("#form_feedback").empty().html("<div class='callout callout-success'><h5>Success!</h5></div>");
-				$("#form_1_button_submit").prop('disabled',false);
-			}
-			else
-			{
-				$("#form_feedback").empty().html(data);
-				$("#form_1_button_submit").prop('disabled',false);
-			}
-		}).fail(function(data,status){
-				$("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Error, try again soon.</h5></div>");
-				$("#form_1_button_submit").prop('disabled',false);
-		});
-		event.preventDefault();
-	});
+  $("#form_1").submit(function(){
+      var formData = new FormData($(this)[0]);
+      $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+  		$("#form_1_button_submit").prop('disabled', true);
+      $.ajax({
+          url: '/system/UserRegister',
+          type: 'POST',
+          data: formData,
+          async: false,
+          success: function (data) {
+            if (data == 'OK')
+      			{
+      				$("#form_feedback").empty().html("<div class='callout callout-success'><h5>Success!</h5></div>");
+      				$("#form_1_button_submit").prop('disabled',false);
+      			}
+      			else
+      			{
+      				$("#form_feedback").empty().html(data);
+      				$("#form_1_button_submit").prop('disabled',false);
+      			}
+          },
+          error: function (data) {
+            $("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Error, try again soon.</h5></div>");
+    				$("#form_1_button_submit").prop('disabled',false);
+          },
+          cache: false,
+          contentType: false,
+          processData: false
+      });
+      return false;
+  });
 
 	$("#button_check_csv").click(function(){
 		$("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");

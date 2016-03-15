@@ -102,7 +102,6 @@
             </div>
         </section>
 <script>
-
   $(document).ready(function(){
     $('#form_1_waktu_terjadi').datetimepicker({
         format: 'YYYY-MM-DD HH:mm:ss'

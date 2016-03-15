@@ -14,13 +14,6 @@ class SystemController extends Controller
 		$this->middleware('auth');
 	}
 
-	/* USER REGISTER
-	 *
-	 *
-	 *
-	 *
-	 */
-
     public function GetUserRegister()
     {
 		$results = \DB::select('SELECT * FROM ms_jabatan');
@@ -29,11 +22,16 @@ class SystemController extends Controller
 		return view('system.UserRegisterClone')->with('results', $results)->with('results_2', $results_2);
     }
 
-    public function PostUserRegister()
-    {
-        if (\Request::ajax())
+  public function PostUserRegister()
+  {
+    if (\Request::ajax())
 		{
 			$input = \Request::all();
+
+			if ((\Request::hasFile('picture')) && (\Request::file('picture')->isValid()))
+			{
+				$input['file'] = \Request::file('picture');
+			}
 
 			$validator = \Validator::make($input, [
 				'nip' => 'required|max:128|unique:data_pribadi',
@@ -42,6 +40,7 @@ class SystemController extends Controller
 				'kota' => 'required',
 				'jenis_jabatan' => 'required',
 				'jenis_divisi' => 'required',
+				'picture' => 'mimes:jpeg|max:1000',
 			]);
 
 			if ($validator->fails())
@@ -72,6 +71,11 @@ class SystemController extends Controller
 				foreach ($results as $result)
 				{
 					$kota_nama = $result->name;
+				}
+
+				if ((\Request::hasFile('picture')) && (\Request::file('picture')->isValid()))
+				{
+					$file = \Request::file('picture')->move('assets/uploads/images', $input['nip']);
 				}
 
 				\DB::insert('INSERT INTO data_pribadi(

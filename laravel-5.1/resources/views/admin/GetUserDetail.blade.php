@@ -1,231 +1,411 @@
-@extends('core.app')
-
-@section('content')
-<link href="{{ asset('/A/css/style.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.css') }}">
-<title>2016 mshrm ⋅ Employee Detail ⋅ {{ $nip }}</title>
-
-
-      <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-          <h1>
-            Employee Detail
-            <small>{{ $nip }}.</small>
-          </h1>
-          <ol class="breadcrumb">
-            <li><i class="fa fa-dashboard"></i> Employee list</li>
-            <li class="active">{{ $nip }}</li>
-          </ol>
-        </section>
-        
-        <section class="content">
-
-              <div class="box">
-                <div class="box-header">
-                </div><!-- /.box-header -->
-                <div class="box-body">
-				
-				<div style="text-align:center">
-				  <img style="width:175px;" src="{{asset('/assets/uploads/images')}}/{{ $nip }}" alt="No Profile Picture."/>
-				</div>
-				
-				<hr>
-				
-				<div id="form_feedback"></div>
-				
-		        <div class="row">
-		          <div class="col-md-6" style="background-color">
-
-		  @foreach ($results as $result)
-		  
-          <div class="form-group">
-            <label for="nip">NIP</label>
-		    <p class="form-control-static">{{ $result->nip }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="nama_lengkap">Full Name</label>
-		    <p class="form-control-static">{{ $result->nama_lengkap }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="jenis_kelamin">Gender</label>
-		    <p class="form-control-static">{{ $result->jenis_kelamin }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="no_telp">Telephone Number</label>
-		    <p class="form-control-static">{{ $result->no_telp }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="no_hp">Cellphone Number</label>
-		    <p class="form-control-static">{{ $result->no_hp }}</p>
-          </div>
-		                     
-          <div class="form-group">
-            <label for="email">Email Address</label>
-		    <p class="form-control-static">{{ $result->email }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="status_pernikahan">Marital Status</label>
-		    <p class="form-control-static">{{ $result->status_pernikahan }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="kewarganegaraan">Nationality</label>
-		    <p class="form-control-static">{{ $result->kewarganegaraan }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="no_ktp">Residence ID number (KTP)</label>
-		    <p class="form-control-static">{{ $result->no_ktp }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="no_alamat">Address</label>
-		    <p class="form-control-static">{{ $result->alamat }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="provinsi">Province</label>
-		    <p class="form-control-static">{{ $result->provinsi }}. {{ $result->provinsi_nama }}</p>
-          </div>
-                    
-          <div class="form-group">
-            <label for="kota">City</label>
-		    <p class="form-control-static">{{ $result->kota }}. {{ $result->kota_nama }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="kode_pos">Postal Code</label>
-		    <p class="form-control-static">{{ $result->kode_pos }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="suku">Tribe</label>
-		    <p class="form-control-static">{{ $result->suku }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="literasi_membaca">Able to Read?</label>
-		    <p class="form-control-static">{{ $result->literasi_membaca }}</p>
-          </div>
-                    
-          <div class="form-group">
-            <label for="literasi_menulis">Able to Write?</label>
-		    <p class="form-control-static">{{ $result->literasi_menulis }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="pendidikan">Highest Education</label>
-		    <p class="form-control-static">{{ $result->pendidikan }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="riwayat_penyakit">Sickness History</label>
-		    <p class="form-control-static">{{ $result->riwayat_penyakit }}</p>
-          </div>
-		
-          <div class="form-group">
-            <label for="bpjs_kesehatan">BPJS Health</label>
-		    <p class="form-control-static">{{ $result->bpjs_kesehatan }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="bpjs_ketenagakerjaan">BPJS Employment</label>
-		    <p class="form-control-static">{{ $result->bpjs_ketenagakerjaan }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="asuransi">Insurance</label>
-		    <p class="form-control-static">{{ $result->asurasi }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="jenis_jabatan">Position Type</label>
-		    <p class="form-control-static">{{ $result->jenis_jabatan }}. {{ $result->jenis_jabatan_nama }}</p>
-          </div>
-                    
-          <div class="form-group">
-            <label for="jenis_divisi">Division Type</label>
-		    <p class="form-control-static">{{ $result->jenis_divisi }}. {{ $result->jenis_divisi_nama }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="created_at">Start Date</label>
-		    <p class="form-control-static">{{ $result->created_at }}</p>
-          </div>
-		  @endforeach
-		  
-		          </div>
-		          <div class="col-md-6">
-		  @foreach ($results_2 as $result_2)		  
-          <div class="form-group">
-            <label for="nama_pasangan">Spouse's Name</label>
-		    <p class="form-control-static">{{ $result_2->nama_pasangan }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="jumlah_anak">Number of Children</label>
-		    <p class="form-control-static">{{ $result_2->jumlah_anak }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="nama_anak_1">First Child's Name</label>
-		    <p class="form-control-static">{{ $result_2->nama_anak_1}}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="nama_anak_2">Second Child's Name</label>
-		    <p class="form-control-static">{{ $result_2->nama_anak_2}}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="nama_anak_3">Third Child's Name</label>
-		    <p class="form-control-static">{{ $result_2->nama_anak_3}}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="nama_ibu">Mother's Name</label>
-		    <p class="form-control-static">{{ $result_2->nama_ibu}}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="nama_ayah">Father's Name</label>
-		    <p class="form-control-static">{{ $result_2->nama_ayah}}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="kontak_keluarga_1">Family's Contact 1</label>
-		    <p class="form-control-static">{{ $result_2->kontak_keluarga_1 }}</p>
-          </div>
-          
-          <div class="form-group">
-            <label for="kontak_keluarga_2">Family's Contact 2</label>
-		    <p class="form-control-static">{{ $result_2->kontak_keluarga_2 }}</p>
-          </div>
-          @endforeach
-  
-		          </div>
-		        </div>
-				
-                </div><!-- /.box-body -->
-              </div><!-- /.box -->
-		</section>
-		
-<script src="{{ asset('/LTEAdmin/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
-<script>
-	$(function () {
-		$("#example1").DataTable();
-	});
-</script>
-
+<div class="row">
+  <div class="col-md-12" style="text-align: center">
+    <img style="width:175px;" src="{{asset('/assets/uploads/images')}}/{{ $nip }}" class="img-circle" alt="No Profile Picture."/>
+  </div>
 </div>
-@endsection
+
+<hr>
+
+<div id="form_feedback"></div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="box box-success">
+
+      <div class="box-header with-border">
+        <h3 class="box-title">Personal Information</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+      </div>
+
+      @foreach ($results as $result)
+      <form id="form_1" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div class="box-body">
+
+          <input type="hidden" id="form_1_token" name="_token" value="{{ csrf_token() }}">
+
+          <div class="form-group">
+            <label>NIP</label>
+            <input type="text" class="form-control" value="{{ $result->nip }}" disabled>
+            <input type="hidden" id="form_1_nip" name="nip" value="{{ $result->nip }}">
+          </div>
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" id="form_1_nama_lengkap" name="nama_lengkap" value="{{ $result->nama_lengkap }}">
+          </div>
+
+          <div class="form-group">
+            <label>Gender</label>
+            <p class="form-control-static">{{ $result->jenis_kelamin }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_jenis_kelamin" name="jenis_kelamin" placeholder="gender">
+                  <option value="PRIA">Male (PRIA)</option>
+                  <option value="WANITA">Female (WANITA)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Telephone Number</label>
+            <input type="text" class="form-control" id="form_1_no_telp" name="no_telp" value="{{ $result->no_telp }}">
+          </div>
+
+          <div class="form-group">
+            <label>Cellphone Number</label>
+            <input type="text" class="form-control" id="form_1_no_hp" name="no_hp" value="{{ $result->no_hp }}">
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="text" class="form-control" id="form_1_email" name="email" value="{{ $result->email }}" onChange="javascript:this.value=this.value.toLowerCase();">
+          </div>
+
+          <div class="form-group">
+            <label>Marital Status</label>
+            <p class="form-control-static">{{ $result->status_pernikahan }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_status_pernikahan" name="status_pernikahan" placeholder="marital status">
+                  <option value="TK">Not Married (TK)</option>
+                  <option value="K0">Married, 0 children (K0)</option>
+                  <option value="K1">Married, 1 children (K1)</option>
+                  <option value="K2">Married, 2 childrens (K2)</option>
+                  <option value="K3">Married, 3 childrens (K3)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Nationality</label>
+            <p class="form-control-static">{{ $result->kewarganegaraan }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_kewarganegaraan" name="kewarganegaraan" placeholder="nationality">
+                  <option value="INDONESIA">Indonesia (WNI)</option>
+                  <option value="NON-INDONESIA">Foreign (WNA)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Residence ID number (KTP)</label>
+            <input type="text" class="form-control" id="form_1_no_ktp" name="no_ktp" value="{{ $result->no_ktp }}">
+          </div>
+
+          <div class="form-group">
+            <label>Address</label>
+            <textarea class="form-control" id="form_1_alamat" name="alamat" rows="3" placeholder="address">{{ $result->alamat }}</textarea>
+          </div>
 
 
-           
+          <div class="form-group">
+            <label>Province</label>
+            <p class="form-control-static">{{ $result->provinsi }}. {{ $result->provinsi_nama }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_provinsi" name="provinsi" placeholder="province (provinsi)">
+                  <option value=""></option>
+                  @foreach ($provinces as $province)
+                  <option value="{{ $province->id }}">{{ $province->id }}. {{ $province->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <p class="form-control-static">{{ $result->kota }}. {{ $result->kota_nama }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div id="form_1_content_kota">
+                <div class="form-group">
+                  <label><span class="label label-success">Change to edit</span></label>
+                  <select class="form-control" id="form_1_kota" name="kota" placeholder="city (kota)">
+                    <option value=""></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Postal Code</label>
+            <input type="text" class="form-control" id="form_1_kode_pos" name="kode_pos" value="{{ $result->kode_pos }}">
+          </div>
+
+          <div class="form-group">
+            <label>Tribe</label>
+            <p class="form-control-static">{{ $result->suku }}</p>
+            <input type="text" class="form-control" id="form_1_suku" name="suku" value="{{ $result->suku }}">
+          </div>
+
+          <div class="form-group">
+            <label>Able to Read?</label>
+            <p class="form-control-static">{{ $result->literasi_membaca }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_literasi_membaca" name="literasi_membaca" placeholder="able to read?">
+                  <option value="YA">Yes (YA)</option>
+                  <option value="TIDAK">No (TIDAK)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Able to Write?</label>
+            <p class="form-control-static">{{ $result->literasi_menulis }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_literasi_menulis" name="literasi_menulis" placeholder="able to write?">
+                  <option value="YA">Yes (YA)</option>
+                  <option value="TIDAK">No (TIDAK)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Highest Education</label>
+            <p class="form-control-static">{{ $result->pendidikan }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_pendidikan" name="pendidikan" placeholder="highest education">
+                  <option value="TIDAK SEKOLAH">Never Went to School</option>
+                  <option value="SD">Elementary School (SD)</option>
+                  <option value="SMP">Middle School (SMP)</option>
+                  <option value="SMA">High School (SMA)</option>
+                  <option value="SMK">High School (SMK)</option>
+                  <option value="S1">Bachelor's Degree (S1)</option>
+                  <option value="S2">Master's Degree (S2)</option>
+                  <option value="S3">Doctoral Degree (S3)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Sickness History</label>
+            <textarea class="form-control" id="form_1_riwayat_penyakit" name="riwayat_penyakit" rows="3">{{ $result->riwayat_penyakit }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label>BPJS Health</label>
+            <input type="text" class="form-control" id="form_1_bpjs_kesehatan" name="bpjs_kesehatan" value="{{ $result->bpjs_kesehatan }}">
+          </div>
+
+          <div class="form-group">
+            <label>BPJS Employment</label>
+            <input type="text" class="form-control" id="form_1_bpjs_ketenagakerjaan" name="bpjs_ketenagakerjaan" value="{{ $result->bpjs_ketenagakerjaan }}">
+          </div>
+
+          <div class="form-group">
+            <label>Insurance</label>
+            <input type="text" class="form-control" id="form_1_asurasi" name="asurasi" value="{{ $result->asurasi }}">
+          </div>
+
+          <div class="form-group">
+            <label>Position Type</label>
+            <p class="form-control-static">{{ $result->jenis_jabatan }}. {{ $result->jenis_jabatan_nama }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_jenis_jabatan" name="jenis_jabatan" placeholder="position type">
+                  <option value=""></option>
+                  @foreach ($positions as $position)
+                  <option value="{{ $position->kode_jabatan}}">{{ $position->kode_jabatan }}. {{ $position->nama_jabatan }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Division Type</label>
+            <p class="form-control-static">{{ $result->jenis_divisi }}. {{ $result->jenis_divisi_nama }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div id="form_1_content_jenis_divisi">
+                <div class="form-group">
+                  <label><span class="label label-success">Change to edit</span></label>
+                  <select class="form-control" id="form_1_jenis_divisi" name="jenis_divisi" placeholder="division type">
+                    <option value=""></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="text" class="form-control" id="form_1_created_at" name="created_at" value="{{ $result->created_at }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label>Profile Picture</label>
+            <input type="file" id="form_1_picture" name="picture">
+            <p class="help-block">Profile picture in JPEG format. Ignore this to not change the profile picture.</p>
+          </div>
+
+        </div>
+
+        <div class="box-footer">
+          <button type="submit" id="form_1_button_submit" class="btn btn-info btn-flat">Save Changes Personal Info</button>
+        </div>
+      </form>
+
+      @endforeach
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="box box-info">
+
+      <div class="box-header with-border">
+        <h3 class="box-title">Family Information</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+      </div>
+
+      <div class="box-body">
+        @foreach ($results_2 as $result_2)
+          <div class="form-group">
+            <label>Spouse's Name</label>
+            <p class="form-control-static">{{ $result_2->nama_pasangan }}</p>
+          </div>
+
+          <div class="form-group">
+            <label>Number of Children</label>
+            <p class="form-control-static">{{ $result_2->jumlah_anak }}</p>
+          </div>
+
+          <div class="form-group">
+            <label>First Child's Name</label>
+            <p class="form-control-static">{{ $result_2->nama_anak_1}}</p>
+          </div>
+
+          <div class="form-group">
+            <label>Second Child's Name</label>
+            <p class="form-control-static">{{ $result_2->nama_anak_2}}</p>
+          </div>
+
+          <div class="form-group">
+            <label>Third Child's Name</label>
+            <p class="form-control-static">{{ $result_2->nama_anak_3}}</p>
+          </div>
+
+          <div class="form-group">
+            <label>Mother's Name</label>
+            <p class="form-control-static">{{ $result_2->nama_ibu}}</p>
+          </div>
+
+          <div class="form-group">
+            <label>Father's Name</label>
+            <p class="form-control-static">{{ $result_2->nama_ayah}}</p>
+          </div>
+
+          <div class="form-group">
+            <label>Family's Contact 1</label>
+            <p class="form-control-static">{{ $result_2->kontak_keluarga_1 }}</p>
+          </div>
+
+          <div class="form-group">
+            <label>Family's Contact 2</label>
+            <p class="form-control-static">{{ $result_2->kontak_keluarga_2 }}</p>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function(){
+
+  $("#form_1").submit(function(){
+      var formData = new FormData($(this)[0]);
+      $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+  		$("#form_1_button_submit").prop('disabled', true);
+      $.ajax({
+          url: '/admin/UserDetail',
+          type: 'POST',
+          data: formData,
+          async: false,
+          success: function (data) {
+            if (data == 'OK')
+      			{
+      				$("#form_feedback").empty().html("<div class='callout callout-success'><h5>Success!</h5></div>");
+      				$("#form_1_button_submit").prop('disabled',false);
+      			}
+      			else
+      			{
+      				$("#form_feedback").empty().html(data);
+      				$("#form_1_button_submit").prop('disabled',false);
+      			}
+          },
+          error: function (data) {
+            $("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Error, try again soon.</h5></div>");
+    				$("#form_1_button_submit").prop('disabled',false);
+          },
+          cache: false,
+          contentType: false,
+          processData: false
+      });
+      return false;
+  });
+
+	$("#form_1_provinsi").on('change', function(){
+		var ajax_provinsi = $("#form_1_provinsi").val();
+		$("#form_1_content_kota").load("/ajax/ContentCity/"+ajax_provinsi);
+	});
+
+  $("#form_1_jenis_jabatan").on('change', function(){
+    var ajax_jenis_jabatan = $("#form_1_jenis_jabatan").val();
+    $("#form_1_content_jenis_divisi").load("/ajax/ContentDivision/"+ajax_jenis_jabatan);
+  });
+
+});
+</script>
