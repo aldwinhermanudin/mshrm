@@ -28,7 +28,7 @@
               <div class="col-md-6">
                 <div class="box box-info">
 
-                  <form id="form_1" method="post" enctype="multipart/form-data">
+                  <form id="form_1" method="post" enctype="multipart/form-data" autocomplete="off">
                     <div class="box-header with-border">
                       <h3 class="box-title">Add an Employee's Incident Record ⋅ <span class="label label-info">Manually insert data</span></h3>
                       <div class="box-tools pull-right">
@@ -52,13 +52,18 @@
                       </div>
 
                       <div class="form-group">
+                        <label>Incident Location</label>
+                        <input type="text" class="form-control" id="form_1_tempat_terjadi" name="tempat_terjadi" placeholder="incident location">
+                      </div>
+
+                      <div class="form-group">
                         <label>Incident Time</label>
-                        <input type="text" class="form-control" id="form_1_waktu_terjadi" name="waktu_terjadi" placeholder="choose datetime" autocomplete="off">
+                        <input type="text" class="form-control" id="form_1_waktu_terjadi" name="waktu_terjadi" placeholder="choose datetime">
                       </div>
 
                       <div class="form-group">
                         <label>Report Time</label>
-                        <input type="text" class="form-control" id="form_1_waktu_laporan" name="waktu_laporan" placeholder="choose datetime" autocomplete="off">
+                        <input type="text" class="form-control" id="form_1_waktu_laporan" name="waktu_laporan" placeholder="choose datetime">
                       </div>
 
                       <div class="form-group">
@@ -69,7 +74,7 @@
 
                       <div class="form-group">
                         <label>Reporter's Name</label>
-                        <input type="text" class="form-control" id="form_1_pelapor" name="pelapor" placeholder="reporter's name" autocomplete="off">
+                        <input type="text" class="form-control" id="form_1_pelapor_nama" name="pelapor_nama" placeholder="reporter's name">
                       </div>
 
                     </div>
@@ -126,7 +131,7 @@
         			}
         			else
         			{
-        				$("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Not Uploaded.</h5></div>");
+        				$("#form_feedback").empty().html(data);
         				$("#form_1_button_submit").prop('disabled',false);
         			}
             },

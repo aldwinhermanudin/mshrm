@@ -117,7 +117,7 @@
       if (data == 'OK')
       {
         $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
-        $("#content_" + nip).empty().html("<td>" + nip + "</td><td>Deleted</td><td>Deleted</td><td>Deleted</td><td>Deleted</td><td>Deleted</td><td>Deleted</td><td>Deleted</td><td>Deleted</td>");
+        $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td>");
       }
       else
       {

@@ -47,6 +47,7 @@ Route::post('auth/confirm', 'System\AuthenticationController@PostConfirm');
 
 Route::get('admin/UserDetail/{nip}', 'Admin\AdminController@GetUserDetail');
 Route::post('admin/UserDetail', 'Admin\AdminController@PostUserDetail');
+Route::post('admin/UserDetailFamily', 'Admin\AdminController@PostUserDetailFamily');
 Route::get('admin/UserErase/{nip}', 'Admin\AdminController@GetUserErase');
 Route::post('admin/UserErase', 'Admin\AdminController@PostUserErase');
 

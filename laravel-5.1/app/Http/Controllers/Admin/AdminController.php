@@ -51,7 +51,7 @@ class AdminController extends Controller
 				'kota' => 'required',
 				'jenis_jabatan' => 'required',
 				'jenis_divisi' => 'required',
-				'picture' => 'mimes:jpeg|max:1000',
+				'picture' => 'mimes:jpeg|max:300',
 			]);
 
 			if ($validator->fails())
@@ -89,6 +89,40 @@ class AdminController extends Controller
 					$file = \Request::file('picture')->move('assets/uploads/images', $input['nip']);
 				}
 
+				\DB::table('data_pribadi')
+					->where('nip', $input['nip'])
+					->update([
+						'nama_lengkap' => $input['nama_lengkap'],
+						'email' => $input['email'],
+						'nama_lengkap' => $input['nama_lengkap'],
+						'jenis_kelamin' => $input['jenis_kelamin'],
+						'no_telp' => $input['no_telp'],
+						'no_hp' => $input['no_hp'],
+						'email' => $input['email'],
+						'status_pernikahan' => $input['status_pernikahan'],
+						'kewarganegaraan' => $input['kewarganegaraan'],
+						'no_ktp' => $input['no_ktp'],
+						'alamat' => $input['alamat'],
+						'provinsi' => $input['provinsi'],
+						'provinsi_nama' => $provinsi_nama,
+						'kota' => $input['kota'],
+						'kota_nama' => $kota_nama,
+						'kode_pos' => $input['kode_pos'],
+						'suku' => $input['suku'],
+						'literasi_membaca' => $input['literasi_membaca'],
+						'literasi_menulis' => $input['literasi_menulis'],
+						'pendidikan' => $input['pendidikan'],
+						'riwayat_penyakit' => $input['riwayat_penyakit'],
+						'bpjs_kesehatan' => $input['bpjs_kesehatan'],
+						'bpjs_ketenagakerjaan' => $input['bpjs_ketenagakerjaan'],
+						'asurasi' => $input['asurasi'],
+						'jenis_jabatan' => $input['jenis_jabatan'],
+						'jenis_jabatan_nama' => $jenis_jabatan_nama,
+						'jenis_divisi' => $input['jenis_divisi'],
+						'jenis_divisi_nama' => $jenis_divisi_nama,
+						'updated_at' => $date
+				]);
+
 				return 'OK';
 			}
 		}
@@ -96,8 +130,13 @@ class AdminController extends Controller
 
 	public function PostUserErase()
 	{
-		\File::delete('/assets/uploads/images/872386124');
-		return 'OK';
+		if (\Request::ajax())
+		{
+			$input = \Request::all();
+			\DB::delete('DELETE FROM data_pribadi where nip = ?', [$input['nip']]);
+			\DB::delete('DELETE FROM data_keluarga where nip = ?', [$input['nip']]);
+			return 'OK';
+		}
 	}
 
 	public function GetReportIncident()
@@ -107,14 +146,107 @@ class AdminController extends Controller
 
 	public function PostReportIncident()
 	{
-		if ((\Request::ajax()) && (\Request::hasFile('evidence')) && (\Request::file('evidence')->isValid()))
+		if (\Request::ajax())
 		{
-			$file = \Request::file('evidence')->move('assets/uploads/images', 'awef');
+			$input = \Request::all();
+			$input['url'] = str_random(20);
+
+			if ((\Request::hasFile('evidence')) && (\Request::file('evidence')->isValid()))
+			{
+				$input['evidence'] = \Request::file('evidence');
+			}
+
+			$validator = \Validator::make($input, [
+				'url' => 'unique:insiden_pegawai',
+				'nip' => 'required|exists:data_pribadi,nip',
+				'deskripsi' => 'required|max:512',
+				'tempat_terjadi' => 'required|max:256',
+				'waktu_terjadi' => 'required',
+				'waktu_laporan' => 'required',
+				'evidence' => 'required|mimes:jpeg|max:600',
+				'pelapor_nama' => 'required',
+			]);
+
+			if ($validator->fails())
+			{
+				return view('ajax.Feedback')->withErrors($validator);
+			}
+			else
+			{
+				$date = new \DateTime;
+
+				if ((\Request::hasFile('evidence')) && (\Request::file('evidence')->isValid()))
+				{
+					$file = \Request::file('evidence')->move('assets/uploads/incidents', $input['url']);
+				}
+
+				\DB::insert('INSERT INTO insiden_pegawai (
+					url,
+					nip,
+					deskripsi,
+					tempat_terjadi,
+					waktu_terjadi,
+					waktu_laporan,
+					photo_id,
+					pelapor_nama,
+					pelapor_akun,
+					pelapor_nip,
+					created_at
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [
+					$input['url'],
+					$input['nip'],
+					$input['deskripsi'],
+					$input['tempat_terjadi'],
+					$input['waktu_terjadi'],
+					$input['waktu_laporan'],
+					$input['url'],
+					$input['pelapor_nama'],
+					\Auth::user()->name,
+					\Auth::user()->nip,
+					$date
+				]);
+			}
+
 			return 'OK';
 		}
-		else
+	}
+
+	public function PostUserDetailFamily()
+	{
+		if (\Request::ajax())
 		{
-			return 'NOT OK';
+			$input = \Request::all();
+
+			$validator = \Validator::make($input, [
+				'nip' => 'required|exists:data_pribadi',
+				'jumlah_anak' => 'integer|max:1024',
+			]);
+
+			if ($validator->fails())
+			{
+				return view('ajax.Feedback')->withErrors($validator);
+			}
+			else
+			{
+				$date = new \DateTime;
+
+				\DB::table('data_keluarga')
+					->where('nip', $input['nip'])
+					->update([
+						'nama_pasangan' => $input['nama_pasangan'],
+						'jumlah_anak' => $input['jumlah_anak'],
+						'nama_anak_1' => $input['nama_anak_1'],
+						'nama_anak_2' => $input['nama_anak_2'],
+						'nama_anak_3' => $input['nama_anak_3'],
+						'nama_ibu' => $input['nama_ibu'],
+						'nama_ayah' => $input['nama_ayah'],
+						'kontak_keluarga_1' => $input['kontak_keluarga_1'],
+						'kontak_keluarga_2' => $input['kontak_keluarga_2'],
+						'updated_at' => $date
+				]);
+
+				return 'OK';
+			}
 		}
 	}
 

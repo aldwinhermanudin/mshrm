@@ -1,7 +1,6 @@
 @foreach($results as $result)
 <div style="text-align:center">
-  <!--<img style="width:175px;" src="{{asset('/assets/uploads/images')}}/{{ $nip }}" alt="No Profile Picture."/>-->
-  <img style="width:175px;" src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="No Profile Picture.">
+  <img style="width:175px;" src="{{asset('/assets/uploads/images')}}/{{ $nip }}" class="img-circle" alt="No Profile Picture."/>
 </div>
 <br>
 

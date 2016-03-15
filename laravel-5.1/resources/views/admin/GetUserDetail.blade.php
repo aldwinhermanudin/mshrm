@@ -310,11 +310,21 @@
         </div>
       </div>
 
-      <div class="box-body">
-        @foreach ($results_2 as $result_2)
+      @foreach ($results_2 as $result_2)
+      <form id="form_2" method="post" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" id="form_2_token" name="_token" value="{{ csrf_token() }}">
+
+        <div class="box-body">
+
+          <div class="form-group">
+            <label>NIP</label>
+            <input type="text" class="form-control" value="{{ $result_2->nip }}" disabled>
+            <input type="hidden" id="form_2_nip" name="nip" value="{{ $result_2->nip }}">
+          </div>
+
           <div class="form-group">
             <label>Spouse's Name</label>
-            <p class="form-control-static">{{ $result_2->nama_pasangan }}</p>
+            <input type="text" class="form-control" id="form_2_nama_pasangan" name="nama_pasangan" value="{{ $result_2->nama_pasangan }}">
           </div>
 
           <div class="form-group">
@@ -322,42 +332,63 @@
             <p class="form-control-static">{{ $result_2->jumlah_anak }}</p>
           </div>
 
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_jumlah_anak" name="jumlah_anak" placeholder="number of children">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <div class="form-group">
             <label>First Child's Name</label>
-            <p class="form-control-static">{{ $result_2->nama_anak_1}}</p>
+            <input type="text" class="form-control" id="form_2_nama_anak_1" name="nama_anak_1" value="{{ $result_2->nama_anak_1 }}">
           </div>
 
           <div class="form-group">
             <label>Second Child's Name</label>
-            <p class="form-control-static">{{ $result_2->nama_anak_2}}</p>
+            <input type="text" class="form-control" id="form_2_nama_anak_2" name="nama_anak_2" value="{{ $result_2->nama_anak_2 }}">
           </div>
 
           <div class="form-group">
             <label>Third Child's Name</label>
-            <p class="form-control-static">{{ $result_2->nama_anak_3}}</p>
+            <input type="text" class="form-control" id="form_2_nama_anak_3" name="nama_anak_3" value="{{ $result_2->nama_anak_3 }}">
           </div>
 
           <div class="form-group">
             <label>Mother's Name</label>
-            <p class="form-control-static">{{ $result_2->nama_ibu}}</p>
+            <input type="text" class="form-control" id="form_2_nama_ibu" name="nama_ibu" value="{{ $result_2->nama_ibu }}">
           </div>
 
           <div class="form-group">
             <label>Father's Name</label>
-            <p class="form-control-static">{{ $result_2->nama_ayah}}</p>
+            <input type="text" class="form-control" id="form_2_nama_ayah" name="nama_ayah" value="{{ $result_2->nama_ayah }}">
           </div>
 
           <div class="form-group">
             <label>Family's Contact 1</label>
-            <p class="form-control-static">{{ $result_2->kontak_keluarga_1 }}</p>
+            <input type="text" class="form-control" id="form_2_kontak_keluarga_1" name="kontak_keluarga_1" value="{{ $result_2->kontak_keluarga_1 }}">
           </div>
 
           <div class="form-group">
             <label>Family's Contact 2</label>
             <p class="form-control-static">{{ $result_2->kontak_keluarga_2 }}</p>
+            <input type="text" class="form-control" id="kontak_keluarga_2" name="kontak_keluarga_2" value="{{ $result_2->kontak_keluarga_2 }}">
           </div>
-        @endforeach
-      </div>
+        </div>
+
+        <div class="box-footer">
+          <button type="submit" id="form_2_button_submit" class="btn btn-info btn-flat">Save Changes Family Info</button>
+        </div>
+
+      </form>
+      @endforeach
     </div>
   </div>
 </div>
@@ -389,6 +420,38 @@ $(document).ready(function(){
           error: function (data) {
             $("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Error, try again soon.</h5></div>");
     				$("#form_1_button_submit").prop('disabled',false);
+          },
+          cache: false,
+          contentType: false,
+          processData: false
+      });
+      return false;
+  });
+
+  $("#form_2").submit(function(){
+      var formData = new FormData($(this)[0]);
+      $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+  		$("#form_2_button_submit").prop('disabled', true);
+      $.ajax({
+          url: '/admin/UserDetailFamily',
+          type: 'POST',
+          data: formData,
+          async: false,
+          success: function (data) {
+            if (data == 'OK')
+      			{
+      				$("#form_feedback").empty().html("<div class='callout callout-success'><h5>Success!</h5></div>");
+      				$("#form_2_button_submit").prop('disabled',false);
+      			}
+      			else
+      			{
+      				$("#form_feedback").empty().html(data);
+      				$("#form_2_button_submit").prop('disabled',false);
+      			}
+          },
+          error: function (data) {
+            $("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Error, try again soon.</h5></div>");
+    				$("#form_2_button_submit").prop('disabled',false);
           },
           cache: false,
           contentType: false,

@@ -40,7 +40,7 @@ class SystemController extends Controller
 				'kota' => 'required',
 				'jenis_jabatan' => 'required',
 				'jenis_divisi' => 'required',
-				'picture' => 'mimes:jpeg|max:1000',
+				'picture' => 'mimes:jpeg|max:300',
 			]);
 
 			if ($validator->fails())
@@ -328,14 +328,14 @@ class SystemController extends Controller
 		}
     }
 
-   public function PostUserFamily()
-    {
-        if (\Request::ajax())
+	public function PostUserFamily()
+  {
+    if (\Request::ajax())
 		{
 			$input = \Request::all();
 
 			$validator = \Validator::make($input, [
-				'nip' => 'exists:data_pribadi,nip|unique:data_keluarga',
+				'nip' => 'required|exists:data_pribadi,nip|unique:data_keluarga',
 				'jumlah_anak' => 'integer|max:1024',
 			]);
 
@@ -377,7 +377,7 @@ class SystemController extends Controller
 				return 'OK';
 			}
 		}
-    }
+	}
 
     public function PostUserFamilyFile()
     {
