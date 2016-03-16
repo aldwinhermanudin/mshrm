@@ -27,10 +27,11 @@ class AdminController extends Controller
 		{
 			$results = \DB::select('SELECT * FROM data_pribadi where nip = ?', [$nip]);
 			$results_2 = \DB::select('SELECT * FROM data_keluarga where nip = ?', [$nip]);
+			$results_3 = \DB::select('SELECT * FROM riwayat_kerja where nip = ?', [$nip]);
 			$provinces = \DB::select('SELECT * FROM data_provinsi');
 			$positions = \DB::select('SELECT * FROM ms_jabatan');
 
-			return view('admin.GetUserDetail')->with('results', $results)->with('results_2', $results_2)->with('nip', $nip)->with('provinces', $provinces)->with('positions', $positions);
+			return view('admin.GetUserDetail')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3)->with('nip', $nip)->with('provinces', $provinces)->with('positions', $positions);
 		}
 	}
 
@@ -252,7 +253,6 @@ class AdminController extends Controller
 
 	public function GetReportIncidentUser($nip)
 	{
-
 		$results = \DB::select('SELECT
 			nip,
 			nama_lengkap,
@@ -262,5 +262,145 @@ class AdminController extends Controller
 			created_at
 		 FROM data_pribadi WHERE nip = ?', [$nip]);
 		return view('ajax.ReportIncidentUser')->with('results', $results)->with('nip', $nip);
+	}
+
+	public function GetReportPerformance()
+	{
+		return view('admin.GetReportPerformance');
+	}
+
+	public function PostReportPerformance()
+	{
+		if (\Request::ajax())
+		{
+			$input = \Request::all();
+
+			$validator = \Validator::make($input, [
+				'nip' => 'required|exists:data_pribadi,nip',
+				'nama_penugasan' => 'required|max:256',
+				'keterangan' => 'required',
+				'catatan_kinerja' => 'required',
+				'tanggal_mulai' => 'required',
+				'tanggal_selesai' => 'required',
+			]);
+
+			if ($validator->fails())
+			{
+				return view('ajax.Feedback')->withErrors($validator);
+			}
+			else
+			{
+				$date = new \DateTime;
+
+				\DB::insert('INSERT INTO kinerja_pegawai (
+					nip,
+					nama_penugasan,
+					keterangan,
+					catatan_kinerja,
+					tanggal_mulai,
+					tanggal_selesai,
+					created_at,
+					updated_at
+				) VALUES (?,?,?,?,?,?,?,?)', [
+					$input['nip'],
+					$input['nama_penugasan'],
+					$input['keterangan'],
+					$input['catatan_kinerja'],
+					$input['tanggal_mulai'],
+					$input['tanggal_selesai'],
+					$date,
+					$date
+				]);
+			}
+
+			return 'OK';
+		}
+	}
+
+	public function GetWorkHistory()
+	{
+		return view('admin.GetWorkHistory');
+	}
+
+	public function PostWorkHistory()
+	{
+		if (\Request::ajax())
+		{
+			$input = \Request::all();
+
+			$validator = \Validator::make($input, [
+				'nip' => 'required|exists:data_pribadi,nip|unique:riwayat_kerja',
+				'instansi_terakhir' => 'max:256',
+				'pangkat' => 'max:256',
+				'jabatan' => 'max:256',
+			]);
+
+			if ($validator->fails())
+			{
+				return view('ajax.Feedback')->withErrors($validator);
+			}
+			else
+			{
+				$date = new \DateTime;
+
+				\DB::insert('INSERT INTO riwayat_kerja(
+					nip,
+					instansi_terakhir,
+					pangkat,
+					jabatan,
+					masa_kontrak_mulai,
+					masa_kontrak_selesai,
+					created_at,
+					updated_at
+				) VALUES (?,?,?,?,?,?,?,?)', [
+					$input['nip'],
+					$input['instansi_terakhir'],
+					$input['pangkat'],
+					$input['jabatan'],
+					$input['masa_kontrak_mulai'],
+					$input['masa_kontrak_selesai'],
+					$date,
+					$date
+				]);
+			}
+
+			return 'OK';
+		}
+	}
+
+	public function PostWorkHistoryEdit()
+	{
+		if (\Request::ajax())
+		{
+			$input = \Request::all();
+
+			$validator = \Validator::make($input, [
+				'instansi_terakhir' => 'max:256',
+				'pangkat' => 'max:256',
+				'jabatan' => 'max:256',
+			]);
+
+			if ($validator->fails())
+			{
+				return view('ajax.Feedback')->withErrors($validator);
+			}
+			else
+			{
+				$date = new \DateTime;
+
+				\DB::table('riwayat_kerja')
+					->where('nip', $input['nip'])
+					->update([
+						'instansi_terakhir' => $input['instansi_terakhir'],
+						'pangkat' => $input['pangkat'],
+						'jabatan' => $input['jabatan'],
+						'masa_kontrak_mulai' => $input['masa_kontrak_mulai'],
+						'masa_kontrak_selesai' => $input['masa_kontrak_selesai'],
+						'updated_at' => $date
+				]);
+			}
+
+			return 'OK';
+		}
 	}
 }

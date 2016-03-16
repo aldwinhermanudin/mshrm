@@ -60,3 +60,11 @@ Route::get('admin/UserList', 'Admin\AdminController@GetUserlist');
 Route::get('admin/ReportIncident', 'Admin\AdminController@GetReportIncident');
 Route::post('admin/ReportIncident', 'Admin\AdminController@PostReportIncident');
 route::get('admin/ReportIncidentUser/{nip}', 'Admin\AdminController@GetReportIncidentUser');
+
+//Super new routes
+Route::get('admin/ReportPerformance', 'Admin\AdminController@GetReportPerformance');
+Route::post('admin/ReportPerformance', 'Admin\AdminController@PostReportPerformance');
+
+Route::get('admin/WorkHistory', 'Admin\AdminController@GetWorkHistory');
+Route::post('admin/WorkHistory', 'Admin\AdminController@PostWorkHistory');
+Route::post('admin/WorkHistoryEdit', 'Admin\AdminController@PostWorkHistoryEdit');

@@ -311,7 +311,7 @@
       </div>
 
       @foreach ($results_2 as $result_2)
-      <form id="form_2" method="post" enctype="multipart/form-data" autocomplete="off">
+      <form id="form_2" method="post" autocomplete="off">
         <input type="hidden" id="form_2_token" name="_token" value="{{ csrf_token() }}">
 
         <div class="box-body">
@@ -378,7 +378,6 @@
 
           <div class="form-group">
             <label>Family's Contact 2</label>
-            <p class="form-control-static">{{ $result_2->kontak_keluarga_2 }}</p>
             <input type="text" class="form-control" id="kontak_keluarga_2" name="kontak_keluarga_2" value="{{ $result_2->kontak_keluarga_2 }}">
           </div>
         </div>
@@ -386,10 +385,63 @@
         <div class="box-footer">
           <button type="submit" id="form_2_button_submit" class="btn btn-info btn-flat">Save Changes Family Info</button>
         </div>
-
       </form>
       @endforeach
     </div>
+
+    <br />
+
+    <div class="box box-warning">
+      <div class="box-header with-border">
+        <h3 class="box-title">Work History</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+      </div>
+
+      @foreach ($results_3 as $result_3)
+      <form id="form_3" method="post" autocomplete="off">
+        <input type="hidden" id="form_3_token" name="_token" value="{{ csrf_token() }}">
+
+        <div class="box-body">
+          <div class="form-group">
+            <label>NIP</label>
+            <input type="text" class="form-control" value="{{ $result_3->nip }}" disabled>
+            <input type="hidden" id="form_3_nip" name="nip" value="{{ $result_3->nip }}">
+          </div>
+
+          <div class="form-group">
+            <label>Previous Institution / Company</label>
+            <input type="text" class="form-control" id="form_3_instansi_terakhir" name="instansi_terakhir" value="{{ $result_3->instansi_terakhir }}">
+          </div>
+
+          <div class="form-group">
+            <label>Previous Rank</label>
+            <input type="text" class="form-control" id="form_3_pangkat" name="pangkat" value="{{ $result_3->pangkat }}">
+          </div>
+
+          <div class="form-group">
+            <label>Previous Position</label>
+            <input type="text" class="form-control" id="form_3_jabatan" name="jabatan" value="{{ $result_3->jabatan }}">
+          </div>
+
+          <div class="form-group">
+            <label>Contract Start</label>
+            <input type="text" class="form-control" id="form_3_masa_kontrak_mulai" name="masa_kontrak_mulai" value="{{ $result_3->masa_kontrak_mulai }}">
+          </div>
+
+          <div class="form-group">
+            <label>Contract End</label>
+            <input type="text" class="form-control" id="form_3_masa_kontrak_selesai" name="masa_kontrak_selesai" value="{{ $result_3->masa_kontrak_selesai }}">
+          </div>
+
+        <div class="box-footer">
+          <button type="submit" id="form_3_button_submit" class="btn btn-info btn-flat">Save Changes Work History Info</button>
+        </div>
+      </form>
+      @endforeach
+    </div>
+
   </div>
 </div>
 
@@ -452,6 +504,38 @@ $(document).ready(function(){
           error: function (data) {
             $("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Error, try again soon.</h5></div>");
     				$("#form_2_button_submit").prop('disabled',false);
+          },
+          cache: false,
+          contentType: false,
+          processData: false
+      });
+      return false;
+  });
+
+  $("#form_3").submit(function(){
+      var formData = new FormData($(this)[0]);
+      $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+  		$("#form_3_button_submit").prop('disabled', true);
+      $.ajax({
+          url: '/admin/WorkHistoryEdit',
+          type: 'POST',
+          data: formData,
+          async: false,
+          success: function (data) {
+            if (data == 'OK')
+      			{
+      				$("#form_feedback").empty().html("<div class='callout callout-success'><h5>Success!</h5></div>");
+      				$("#form_3_button_submit").prop('disabled',false);
+      			}
+      			else
+      			{
+      				$("#form_feedback").empty().html(data);
+      				$("#form_3_button_submit").prop('disabled',false);
+      			}
+          },
+          error: function (data) {
+            $("#form_feedback").empty().html("<div class='callout callout-warning'><h5>Error, try again soon.</h5></div>");
+    				$("#form_3_button_submit").prop('disabled',false);
           },
           cache: false,
           contentType: false,

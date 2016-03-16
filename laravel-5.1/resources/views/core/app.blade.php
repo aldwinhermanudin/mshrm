@@ -158,6 +158,7 @@
               <ul class="treeview-menu">
                 <li><a href="{{ url('/admin/UserList') }}"><i class="fa fa-user-plus"></i> Employee List</a></li>
                 <li><a href="{{ url('/admin/ReportIncident') }}"><i class="fa fa-user-plus"></i> Report Incident</a></li>
+                <li><a href="{{ url('/admin/ReportPerformance') }}"><i class="fa fa-user-plus"></i> Record Performance</a></li>
               </ul>
             </li>
             <li class="treeview">
@@ -167,6 +168,23 @@
               <ul class="treeview-menu">
                 <li><a href="{{ url('/system/UserRegister') }}"><i class="fa fa-user-plus"></i> Add Employee</a></li>
                 <li><a href="{{ url('/system/UserFamily') }}"><i class="fa fa-user-plus"></i> Add Employee's Family Data</a></li>
+                <li><a href="{{ url('/admin/WorkHistory') }}"><i class="fa fa-user-plus"></i> Work History</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-users"></i> <span>PDF Exports</span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="#"><i class="fa fa-user-plus"></i> Employee List</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-users"></i> <span>XLSX Exports</span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="#"><i class="fa fa-user-plus"></i> Employee List</a></li>
               </ul>
             </li>
           </ul>
@@ -176,11 +194,7 @@
 
       <!-- =============================================== -->
 
-
-
 @yield('content')
-
-
 
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
