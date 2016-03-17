@@ -14,11 +14,13 @@ class AdminController extends Controller
 		$this->middleware('auth');
 	}
 
-    public function GetUserlist()
-    {
+  public function GetUserlist()
+  {
 		$results = \DB::select('SELECT nip, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pribadi');
+		$results_2 = \DB::select('SELECT id, nip, url, deskripsi, tempat_terjadi, waktu_terjadi, waktu_laporan, pelapor_akun FROM insiden_pegawai ORDER BY created_at DESC LIMIT 0,100');
+		$results_3 = \DB::select('SELECT id, nip, nama_penugasan, keterangan, catatan_kinerja, tanggal_mulai, tanggal_selesai FROM kinerja_pegawai ORDER BY created_at DESC LIMIT 0,100');
 
-		return view('admin.GetUserList')->with('results', $results);
+		return view('admin.GetUserList')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3);
 	}
 
 	public function GetUserDetail($nip)
@@ -401,6 +403,32 @@ class AdminController extends Controller
 			}
 
 			return 'OK';
+		}
+	}
+
+	public function GetIncidentDetail($id)
+	{
+		if (\Request::ajax())
+		{
+			$results = \DB::select('SELECT * FROM insiden_pegawai WHERE id = ?', [$id]);
+			return view('admin.GetIncidentDetail')->with('results', $results);
+		}
+	}
+
+	public function GetPerformanceDetail($id)
+	{
+		if (\Request::ajax())
+		{
+			$results = \DB::select('SELECT * FROM kinerja_pegawai WHERE id = ?', [$id]);
+			return view('admin.GetPerformanceDetail')->with('results', $results);
+		}
+	}
+
+	public function GetExportDetail()
+	{
+		if (\Request::ajax())
+		{
+			return view('admin.GetExportDetail');
 		}
 	}
 }

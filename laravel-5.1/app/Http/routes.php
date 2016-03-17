@@ -51,6 +51,10 @@ Route::post('admin/UserDetailFamily', 'Admin\AdminController@PostUserDetailFamil
 Route::get('admin/UserErase/{nip}', 'Admin\AdminController@GetUserErase');
 Route::post('admin/UserErase', 'Admin\AdminController@PostUserErase');
 
+Route::get('admin/IncidentDetail/{id}', 'Admin\AdminController@GetIncidentDetail');
+Route::get('admin/PerformanceDetail/{id}', 'Admin\AdminController@GetPerformanceDetail');
+Route::get('admin/ExportDetail', 'Admin\AdminController@GetExportDetail');
+
 Route::get('ajax/ContentDivision/{kode_jabatan}', 'System\SystemController@GetContentDivision');
 Route::get('ajax/ContentCity/{kode_provinsi}', 'System\SystemController@GetContentCity');
 
@@ -59,7 +63,7 @@ Route::get('admin/UserList', 'Admin\AdminController@GetUserlist');
 //New routes
 Route::get('admin/ReportIncident', 'Admin\AdminController@GetReportIncident');
 Route::post('admin/ReportIncident', 'Admin\AdminController@PostReportIncident');
-route::get('admin/ReportIncidentUser/{nip}', 'Admin\AdminController@GetReportIncidentUser');
+Route::get('admin/ReportIncidentUser/{nip}', 'Admin\AdminController@GetReportIncidentUser');
 
 //Super new routes
 Route::get('admin/ReportPerformance', 'Admin\AdminController@GetReportPerformance');
@@ -69,18 +73,6 @@ Route::get('admin/WorkHistory', 'Admin\AdminController@GetWorkHistory');
 Route::post('admin/WorkHistory', 'Admin\AdminController@PostWorkHistory');
 Route::post('admin/WorkHistoryEdit', 'Admin\AdminController@PostWorkHistoryEdit');
 
-Route::get('/excelTest', function () {
-  Excel::create('Filename', function($excel) {
-
-      // Set the title
-      $excel->setTitle('Our new awesome title');
-
-      // Chain the setters
-      $excel->setCreator('Maatwebsite')
-            ->setCompany('Maatwebsite');
-
-      // Call them separately
-      $excel->setDescription('A demonstration to change the file properties');
-
-  })->export('xlsx');
-});
+//Export routes
+Route::get('resources/export/xlsx/EmployeeList', 'System\ResourceController@GetEmployeeListXLSX');
+Route::get('resources/export/pdf/EmployeeList', 'System\ResourceController@GetEmployeeListPDF');

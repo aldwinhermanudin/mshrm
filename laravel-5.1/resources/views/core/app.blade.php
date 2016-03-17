@@ -173,18 +173,10 @@
             </li>
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-users"></i> <span>PDF Exports</span> <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-users"></i> <span>Exports</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="#"><i class="fa fa-user-plus"></i> Employee List</a></li>
-              </ul>
-            </li>
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-users"></i> <span>XLSX Exports</span> <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="#"><i class="fa fa-user-plus"></i> Employee List</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#general_modal" onclick="exportDetail()"><i class="fa fa-user-plus"></i> Exports</a></li>
               </ul>
             </li>
           </ul>
@@ -379,6 +371,27 @@
     <script src="{{ asset('/LTEAdmin/dist/js/app.min.js') }}"></script>
 
     <script src="{{ asset('/LTEAdmin/dist/js/demo.js') }}"></script>
+
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="general_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-body" id="modal_content">
+            Detail
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function exportDetail()
+      {
+        $("#modal_content").empty().load("/admin/ExportDetail/");
+      }
+    </script>
 
   </body>
 </html>

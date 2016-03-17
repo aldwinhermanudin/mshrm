@@ -115,7 +115,6 @@
             <textarea class="form-control" id="form_1_alamat" name="alamat" rows="3" placeholder="address">{{ $result->alamat }}</textarea>
           </div>
 
-
           <div class="form-group">
             <label>Province</label>
             <p class="form-control-static">{{ $result->provinsi }}. {{ $result->provinsi_nama }}</p>
