@@ -11,16 +11,16 @@ const byte ROWS = 4; //four rows
 const byte COLS = 3; //three columns
 char keys[ROWS][COLS] = {
   {
-    '1','2','3'                    }
+    '1','2','3'                        }
   ,
   {
-    '4','5','6'                    }
+    '4','5','6'                        }
   ,
   {
-    '7','8','9'                    }
+    '7','8','9'                        }
   ,
   {
-    '*','0','#'                    }
+    '*','0','#'                        }
 };
 byte rowPins[ROWS] = { 
   34, 32, 30, 28}; //connect to the row pinouts of the keypad
@@ -242,14 +242,15 @@ void fingerScanMenu(){
         info_jari = "Tengah Kanan";
       }
 
+      if (template_start_number > MAX_TEMPLATE_NUMBER){
+        template_start_number = 1;
+      }
+
       if (getFingerprintEnroll(template_start_number) == FINGERPRINT_OK){
         delay(1000);
         if (uploadFingerpintTemplate(template_start_number,nip_input.c_str(), info_jari) == FINGERPRINT_OK){
           delay(2000);
           template_start_number++;
-          if (template_start_number > MAX_TEMPLATE_NUMBER){
-            template_start_number = 1;
-          }
         }
         else{
           delay(2000);
@@ -923,5 +924,7 @@ uint8_t uploadFingerpintTemplate(uint16_t id_in, const char * uid_up, String fin
     return FINGERPRINT_PACKETRECIEVEERR;
   }
 }
+
+
 
 
