@@ -156,7 +156,7 @@ void setTemplateNumberMenu(){
   }
   printMenu(30);
   template_start_number = int_input.toInt();
-  if ( template_start_number == 0){
+  if ( template_start_number == 0 || template_start_number > MAX_TEMPLATE_NUMBER){
     template_start_number = 1;
   }
   lcd.setCursor(11,1);
