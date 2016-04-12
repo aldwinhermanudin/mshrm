@@ -156,7 +156,7 @@
                 <i class="fa fa-users"></i> <span>Admin</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{ url('/admin/UserList') }}"><i class="fa fa-user-plus"></i> Employee List</a></li>
+                <li><a href="{{ url('/admin/EmployeeList') }}"><i class="fa fa-user-plus"></i> Employee List</a></li>
                 <li><a href="{{ url('/admin/ReportIncident') }}"><i class="fa fa-user-plus"></i> Report Incident</a></li>
                 <li><a href="{{ url('/admin/ReportPerformance') }}"><i class="fa fa-user-plus"></i> Record Performance</a></li>
               </ul>
@@ -166,9 +166,7 @@
                 <i class="fa fa-users"></i> <span>Employee</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{ url('/system/UserRegister') }}"><i class="fa fa-user-plus"></i> Add Employee</a></li>
-                <li><a href="{{ url('/system/UserFamily') }}"><i class="fa fa-user-plus"></i> Add Employee's Family Data</a></li>
-                <li><a href="{{ url('/admin/WorkHistory') }}"><i class="fa fa-user-plus"></i> Work History</a></li>
+                <li><a href="{{ url('/system/EmployeeRegister') }}"><i class="fa fa-user-plus"></i> Add Employee</a></li>
               </ul>
             </li>
             <li class="treeview">
@@ -371,6 +369,11 @@
     <script src="{{ asset('/LTEAdmin/dist/js/app.min.js') }}"></script>
 
     <script src="{{ asset('/LTEAdmin/dist/js/demo.js') }}"></script>
+
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+
 
     <!-- Modal -->
     <div class="modal fade bs-example-modal-lg" id="general_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

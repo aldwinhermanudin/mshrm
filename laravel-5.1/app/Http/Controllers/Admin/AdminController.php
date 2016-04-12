@@ -14,26 +14,32 @@ class AdminController extends Controller
 		$this->middleware('auth');
 	}
 
-  public function GetUserlist()
+  public function GetEmployeeList()
   {
-		$results = \DB::select('SELECT nip, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pribadi');
+		$results = \DB::select('SELECT nip, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pegawai');
 		$results_2 = \DB::select('SELECT id, nip, url, deskripsi, tempat_terjadi, waktu_terjadi, waktu_laporan, pelapor_akun FROM insiden_pegawai ORDER BY created_at DESC LIMIT 0,100');
 		$results_3 = \DB::select('SELECT id, nip, nama_penugasan, keterangan, catatan_kinerja, tanggal_mulai, tanggal_selesai FROM kinerja_pegawai ORDER BY created_at DESC LIMIT 0,100');
 
-		return view('admin.GetUserList')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3);
+		return view('admin.GetEmployeeList')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3);
 	}
 
 	public function GetUserDetail($nip)
 	{
-		if (\DB::select('SELECT 1 FROM data_pribadi WHERE nip = ?', [$nip]))
+		if (\DB::select('SELECT 1 FROM data_pegawai WHERE nip = ?', [$nip]))
 		{
-			$results = \DB::select('SELECT * FROM data_pribadi where nip = ?', [$nip]);
-			$results_2 = \DB::select('SELECT * FROM data_keluarga where nip = ?', [$nip]);
-			$results_3 = \DB::select('SELECT * FROM riwayat_kerja where nip = ?', [$nip]);
+			$results = \DB::select('SELECT * FROM data_pegawai where nip = ?', [$nip]);
+			return view('admin.GetUserDetail')->with('results', $results)->with('nip', $nip);
+		}
+	}
+
+	public function GetUserDetailEdit($nip)
+	{
+		if (\DB::select('SELECT 1 FROM data_pegawai WHERE nip = ?', [$nip]))
+		{
+			$results = \DB::select('SELECT * FROM data_pegawai where nip = ?', [$nip]);
 			$provinces = \DB::select('SELECT * FROM data_provinsi');
 			$positions = \DB::select('SELECT * FROM ms_jabatan');
-
-			return view('admin.GetUserDetail')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3)->with('nip', $nip)->with('provinces', $provinces)->with('positions', $positions);
+			return view('admin.GetUserDetailEdit')->with('results', $results)->with('nip', $nip)->with('provinces', $provinces)->with('positions', $positions);
 		}
 	}
 
@@ -92,12 +98,11 @@ class AdminController extends Controller
 					$file = \Request::file('picture')->move('assets/uploads/images', $input['nip']);
 				}
 
-				\DB::table('data_pribadi')
+				\DB::table('data_pegawai')
 					->where('nip', $input['nip'])
 					->update([
 						'nama_lengkap' => $input['nama_lengkap'],
-						'email' => $input['email'],
-						'nama_lengkap' => $input['nama_lengkap'],
+						'tanggal_lahir' => $input['tanggal_lahir'],
 						'jenis_kelamin' => $input['jenis_kelamin'],
 						'no_telp' => $input['no_telp'],
 						'no_hp' => $input['no_hp'],
@@ -123,6 +128,23 @@ class AdminController extends Controller
 						'jenis_jabatan_nama' => $jenis_jabatan_nama,
 						'jenis_divisi' => $input['jenis_divisi'],
 						'jenis_divisi_nama' => $jenis_divisi_nama,
+						'nama_pasangan' => $input['nama_pasangan'],
+						'jumlah_anak' => $input['jumlah_anak'],
+						'nama_anak_1' => $input['nama_anak_1'],
+						'nama_anak_2' => $input['nama_anak_2'],
+						'nama_anak_3' => $input['nama_anak_3'],
+						'nama_ibu' => $input['nama_ibu'],
+						'nama_ayah' => $input['nama_ayah'],
+						'kontak_keluarga_1' => $input['kontak_keluarga_1'],
+						'kontak_keluarga_2' => $input['kontak_keluarga_2'],
+						'instansi_terakhir' => $input['instansi_terakhir'],
+						'pangkat' => $input['pangkat'],
+						'jabatan' => $input['jabatan'],
+						'masa_kontrak_mulai' => $input['masa_kontrak_mulai'],
+						'masa_kontrak_selesai' => $input['masa_kontrak_selesai'],
+						'tanggal_bergabung' => $input['tanggal_bergabung'],
+						'status' => $input['status'],
+						'catatan_kinerja' => $input['catatan_kinerja'],
 						'updated_at' => $date
 				]);
 
@@ -136,8 +158,7 @@ class AdminController extends Controller
 		if (\Request::ajax())
 		{
 			$input = \Request::all();
-			\DB::delete('DELETE FROM data_pribadi where nip = ?', [$input['nip']]);
-			\DB::delete('DELETE FROM data_keluarga where nip = ?', [$input['nip']]);
+			\DB::delete('DELETE FROM data_pegawai where nip = ?', [$input['nip']]);
 			return 'OK';
 		}
 	}
@@ -161,7 +182,7 @@ class AdminController extends Controller
 
 			$validator = \Validator::make($input, [
 				'url' => 'unique:insiden_pegawai',
-				'nip' => 'required|exists:data_pribadi,nip',
+				'nip' => 'required|exists:data_pegawai,nip',
 				'deskripsi' => 'required|max:512',
 				'tempat_terjadi' => 'required|max:256',
 				'waktu_terjadi' => 'required',
@@ -214,45 +235,6 @@ class AdminController extends Controller
 		}
 	}
 
-	public function PostUserDetailFamily()
-	{
-		if (\Request::ajax())
-		{
-			$input = \Request::all();
-
-			$validator = \Validator::make($input, [
-				'nip' => 'required|exists:data_pribadi',
-				'jumlah_anak' => 'integer|max:1024',
-			]);
-
-			if ($validator->fails())
-			{
-				return view('ajax.Feedback')->withErrors($validator);
-			}
-			else
-			{
-				$date = new \DateTime;
-
-				\DB::table('data_keluarga')
-					->where('nip', $input['nip'])
-					->update([
-						'nama_pasangan' => $input['nama_pasangan'],
-						'jumlah_anak' => $input['jumlah_anak'],
-						'nama_anak_1' => $input['nama_anak_1'],
-						'nama_anak_2' => $input['nama_anak_2'],
-						'nama_anak_3' => $input['nama_anak_3'],
-						'nama_ibu' => $input['nama_ibu'],
-						'nama_ayah' => $input['nama_ayah'],
-						'kontak_keluarga_1' => $input['kontak_keluarga_1'],
-						'kontak_keluarga_2' => $input['kontak_keluarga_2'],
-						'updated_at' => $date
-				]);
-
-				return 'OK';
-			}
-		}
-	}
-
 	public function GetReportIncidentUser($nip)
 	{
 		$results = \DB::select('SELECT
@@ -262,7 +244,7 @@ class AdminController extends Controller
 			jenis_jabatan_nama,
 			jenis_divisi_nama,
 			created_at
-		 FROM data_pribadi WHERE nip = ?', [$nip]);
+		 FROM data_pegawai WHERE nip = ?', [$nip]);
 		return view('ajax.ReportIncidentUser')->with('results', $results)->with('nip', $nip);
 	}
 
@@ -278,7 +260,7 @@ class AdminController extends Controller
 			$input = \Request::all();
 
 			$validator = \Validator::make($input, [
-				'nip' => 'required|exists:data_pribadi,nip',
+				'nip' => 'required|exists:data_pegawai,nip',
 				'nama_penugasan' => 'required|max:256',
 				'keterangan' => 'required',
 				'catatan_kinerja' => 'required',
@@ -312,93 +294,6 @@ class AdminController extends Controller
 					$input['tanggal_selesai'],
 					$date,
 					$date
-				]);
-			}
-
-			return 'OK';
-		}
-	}
-
-	public function GetWorkHistory()
-	{
-		return view('admin.GetWorkHistory');
-	}
-
-	public function PostWorkHistory()
-	{
-		if (\Request::ajax())
-		{
-			$input = \Request::all();
-
-			$validator = \Validator::make($input, [
-				'nip' => 'required|exists:data_pribadi,nip|unique:riwayat_kerja',
-				'instansi_terakhir' => 'max:256',
-				'pangkat' => 'max:256',
-				'jabatan' => 'max:256',
-			]);
-
-			if ($validator->fails())
-			{
-				return view('ajax.Feedback')->withErrors($validator);
-			}
-			else
-			{
-				$date = new \DateTime;
-
-				\DB::insert('INSERT INTO riwayat_kerja(
-					nip,
-					instansi_terakhir,
-					pangkat,
-					jabatan,
-					masa_kontrak_mulai,
-					masa_kontrak_selesai,
-					created_at,
-					updated_at
-				) VALUES (?,?,?,?,?,?,?,?)', [
-					$input['nip'],
-					$input['instansi_terakhir'],
-					$input['pangkat'],
-					$input['jabatan'],
-					$input['masa_kontrak_mulai'],
-					$input['masa_kontrak_selesai'],
-					$date,
-					$date
-				]);
-			}
-
-			return 'OK';
-		}
-	}
-
-	public function PostWorkHistoryEdit()
-	{
-		if (\Request::ajax())
-		{
-			$input = \Request::all();
-
-			$validator = \Validator::make($input, [
-				'instansi_terakhir' => 'max:256',
-				'pangkat' => 'max:256',
-				'jabatan' => 'max:256',
-			]);
-
-			if ($validator->fails())
-			{
-				return view('ajax.Feedback')->withErrors($validator);
-			}
-			else
-			{
-				$date = new \DateTime;
-
-				\DB::table('riwayat_kerja')
-					->where('nip', $input['nip'])
-					->update([
-						'instansi_terakhir' => $input['instansi_terakhir'],
-						'pangkat' => $input['pangkat'],
-						'jabatan' => $input['jabatan'],
-						'masa_kontrak_mulai' => $input['masa_kontrak_mulai'],
-						'masa_kontrak_selesai' => $input['masa_kontrak_selesai'],
-						'updated_at' => $date
 				]);
 			}
 
