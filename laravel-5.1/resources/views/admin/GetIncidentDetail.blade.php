@@ -3,7 +3,7 @@
     <div class="box box-success">
 
       <div class="box-header with-border">
-        <h3 class="box-title">Incident Detail</h3>
+        <h3 class="box-title">Event Detail</h3>
         <div class="box-tools pull-right">
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
         </div>
@@ -21,6 +21,11 @@
           <div class="form-group">
             <label>NIP</label>
             <input type="text" class="form-control" value="{{ $result->nip }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label>Type</label>
+            <p class="form-control-static">{{ $result->tipe }}</p>
           </div>
 
           <div class="form-group">

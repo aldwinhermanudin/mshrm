@@ -154,57 +154,114 @@
     </h1>
   </section>
 
-
-    <section class="content">
-      <div id="page_feedback"></div>
-      <div class="box">
-        <div class="box-header">
-        </div>
-        <div class="box-body">
-          <table id="table_3" class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>NIP</th>
-                <th>Task Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              @if (empty($results))
-              <tr>
-                <td>Empty</td>
-                <td>Empty</td>
-                <td>Empty</td>
-                <td>Empty</td>
-                <td>Empty</td>
-              </tr>
-              @else
-              @foreach($results_3 as $result_3)
-              <tr id="content_3_{{ $result_3->id }}">
-                <td>{{ $result_3->nip }}</td>
-                <td>{{ $result_3->nama_penugasan }}</td>
-                <td>{{ $result_3->tanggal_mulai }}</td>
-                <td>{{ $result_3->tanggal_selesai }}</td>
-                <td><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailPerformance({{ $result_3->id }})"><span class="glyphicon glyphicon-edit"></span></a></td>
-              </tr>
-              @endforeach
-              @endif
-            </tbody>
-            <tfoot>
-              <tr>
-                <th>NIP</th>
-                <th>Task Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Details</th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+  <section class="content">
+    <div id="page_feedback"></div>
+    <div class="box">
+      <div class="box-header">
       </div>
-    </section>
+      <div class="box-body">
+        <table id="table_3" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>NIP</th>
+              <th>Task Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (empty($results))
+            <tr>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+            </tr>
+            @else
+            @foreach($results_3 as $result_3)
+            <tr id="content_3_{{ $result_3->id }}">
+              <td>{{ $result_3->nip }}</td>
+              <td>{{ $result_3->nama_penugasan }}</td>
+              <td>{{ $result_3->tanggal_mulai }}</td>
+              <td>{{ $result_3->tanggal_selesai }}</td>
+              <td><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailPerformance({{ $result_3->id }})"><span class="glyphicon glyphicon-edit"></span></a></td>
+            </tr>
+            @endforeach
+            @endif
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>NIP</th>
+              <th>Task Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Details</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-header">
+    <h1>
+      Performance Record
+      <small>Recorded Employee's Performances.</small>
+    </h1>
+  </section>
+
+  <section class="content">
+    <div id="page_feedback"></div>
+    <div class="box">
+      <div class="box-header">
+      </div>
+      <div class="box-body">
+        <table id="table_3" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>NIP</th>
+              <th>Task Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (empty($results))
+            <tr>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+            </tr>
+            @else
+            @foreach($results_3 as $result_3)
+            <tr id="content_3_{{ $result_3->id }}">
+              <td>{{ $result_3->nip }}</td>
+              <td>{{ $result_3->nama_penugasan }}</td>
+              <td>{{ $result_3->tanggal_mulai }}</td>
+              <td>{{ $result_3->tanggal_selesai }}</td>
+              <td><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailPerformance({{ $result_3->id }})"><span class="glyphicon glyphicon-edit"></span></a></td>
+            </tr>
+            @endforeach
+            @endif
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>NIP</th>
+              <th>Task Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Details</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
 
 <script src="{{ asset('/LTEAdmin/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>

@@ -50,8 +50,9 @@ class SystemController extends Controller
 	{
 		$results = \DB::select('SELECT * FROM ms_jabatan');
 		$results_2 = \DB::select('SELECT * FROM data_provinsi');
+		$results_3 = \DB::select('SELECT * FROM ms_branch');
 
-		return view('system.EmployeeRegister')->with('results', $results)->with('results_2', $results_2);
+		return view('system.EmployeeRegister')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3);
 	}
 
 	public function PostEmployeeRegister()
@@ -112,6 +113,7 @@ class SystemController extends Controller
 
 				\DB::insert('INSERT INTO data_pegawai(
 					nip,
+					branch,
 					nama_lengkap,
 					tanggal_lahir,
 					jenis_kelamin,
@@ -156,8 +158,9 @@ class SystemController extends Controller
 					tanggal_bergabung,
 					created_at,
 					updated_at
-				) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+				) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
 					$input['nip'],
+					$input['branch'],
 					$input['nama_lengkap'],
 					$input['tanggal_lahir'],
 					$input['jenis_kelamin'],
@@ -211,8 +214,7 @@ class SystemController extends Controller
 
 	public function PostEmployeeRegisterFile()
 	{
-		//(\Request::ajax()) &&
-		if ((\Request::hasFile('file_csv')) && (\Request::file('file_csv')->isValid()))
+		if ((\Request::ajax()) && (\Request::hasFile('file_csv')) && (\Request::file('file_csv')->isValid()))
 		{
 			$file = \Request::file('file_csv');
 
@@ -261,7 +263,7 @@ class SystemController extends Controller
 			        [
 			          'nip' => 'required|unique:data_pegawai',
 			          'nama_lengkap' => 'required',
-								'offset' => 'integer|size:43'
+								'offset' => 'integer|size:45'
 			        ]
 			      );
 
@@ -275,6 +277,8 @@ class SystemController extends Controller
 
 			        \DB::insert('INSERT INTO data_pegawai(
 								nip,
+								branch,
+								supervisor,
 								nama_lengkap,
 								tanggal_lahir,
 								jenis_kelamin,
@@ -319,7 +323,7 @@ class SystemController extends Controller
 								tanggal_bergabung,
 								created_at,
 								updated_at
-			          ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+							) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
 			            $item[0],
 			            $item[1],
 			            $item[2],
@@ -363,6 +367,8 @@ class SystemController extends Controller
 									$item[40],
 									$item[41],
 									$item[42],
+									$item[43],
+									$item[44],
 			            $date,
 			            $date
 			        ]);

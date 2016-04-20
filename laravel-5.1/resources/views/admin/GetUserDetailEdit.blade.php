@@ -31,6 +31,25 @@
           </div>
 
           <div class="form-group">
+            <label>Branch</label>
+            <p class="form-control-static">{{ $result->branch }}</p>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body" style="background-color: whitesmoke">
+              <div class="form-group">
+                <label><span class="label label-success">Change to edit</span></label>
+                <select class="form-control" id="form_1_branch" name="branch" placeholder="branch">
+                  <option value="{{ $result->branch }}">{{ $result->branch }} [Selected]</option>
+                  @foreach ($branches as $branch)
+                  <option value="{{ $branch->nama_branch}}">{{ $branch->nama_branch }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label>Full Name</label>
             <input type="text" class="form-control" id="form_1_nama_lengkap" name="nama_lengkap" value="{{ $result->nama_lengkap }}">
           </div>
@@ -50,6 +69,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_jenis_kelamin" name="jenis_kelamin" placeholder="gender">
+                  <option value="{{ $result->jenis_kelamin }}">{{ $result->jenis_kelamin }} [Selected]</option>
                   <option value="PRIA">Male (PRIA)</option>
                   <option value="WANITA">Female (WANITA)</option>
                 </select>
@@ -82,6 +102,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_status_pernikahan" name="status_pernikahan" placeholder="marital status">
+                  <option value="{{ $result->status_pernikahan }}">{{ $result->status_pernikahan }} [Selected]</option>
                   <option value="TK">Not Married (TK)</option>
                   <option value="K0">Married, 0 children (K0)</option>
                   <option value="K1">Married, 1 children (K1)</option>
@@ -102,6 +123,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_kewarganegaraan" name="kewarganegaraan" placeholder="nationality">
+                  <option value="{{ $result->kewarganegaraan }}">{{ $result->kewarganegaraan }} [Selected]</option>
                   <option value="INDONESIA">Indonesia (WNI)</option>
                   <option value="NON-INDONESIA">Foreign (WNA)</option>
                 </select>
@@ -129,7 +151,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_provinsi" name="provinsi" placeholder="province (provinsi)">
-                  <option value=""></option>
+                  <option value="{{ $result->provinsi }}">{{ $result->provinsi }}. {{ $result->provinsi_nama }} [Selected]</option>
                   @foreach ($provinces as $province)
                   <option value="{{ $province->id }}">{{ $province->id }}. {{ $province->name }}</option>
                   @endforeach
@@ -149,7 +171,7 @@
                 <div class="form-group">
                   <label><span class="label label-success">Change to edit</span></label>
                   <select class="form-control" id="form_1_kota" name="kota" placeholder="city (kota)">
-                    <option value=""></option>
+                    <option value="{{ $result->kota }}">{{ $result->kota }}. {{ $result->kota_nama }} [Selected]</option>
                   </select>
                 </div>
               </div>
@@ -177,6 +199,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_literasi_membaca" name="literasi_membaca" placeholder="able to read?">
+                  <option value="{{ $result->literasi_membaca }}">{{ $result->literasi_membaca }} [Selected]</option>
                   <option value="YA">Yes (YA)</option>
                   <option value="TIDAK">No (TIDAK)</option>
                 </select>
@@ -194,6 +217,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_literasi_menulis" name="literasi_menulis" placeholder="able to write?">
+                  <option value="{{ $result->literasi_menulis }}">{{ $result->literasi_menulis }} [Selected]</option>
                   <option value="YA">Yes (YA)</option>
                   <option value="TIDAK">No (TIDAK)</option>
                 </select>
@@ -211,6 +235,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_pendidikan" name="pendidikan" placeholder="highest education">
+                  <option value="{{ $result->pendidikan }}">{{ $result->pendidikan }} [Selected]</option>
                   <option value="TIDAK SEKOLAH">Never Went to School</option>
                   <option value="SD">Elementary School (SD)</option>
                   <option value="SMP">Middle School (SMP)</option>
@@ -255,7 +280,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_jenis_jabatan" name="jenis_jabatan" placeholder="position type">
-                  <option value=""></option>
+                  <option value="{{ $result->jenis_jabatan }}">{{ $result->jenis_jabatan }}. {{ $result->jenis_jabatan_nama }} [Selected]</option>
                   @foreach ($positions as $position)
                   <option value="{{ $position->kode_jabatan}}">{{ $position->kode_jabatan }}. {{ $position->nama_jabatan }}</option>
                   @endforeach
@@ -265,7 +290,7 @@
           </div>
 
           <div class="form-group">
-            <label>Division Type</label>
+            <label>Location Type</label>
             <p class="form-control-static">{{ $result->jenis_divisi }}. {{ $result->jenis_divisi_nama }}</p>
           </div>
 
@@ -274,8 +299,8 @@
               <div id="form_1_content_jenis_divisi">
                 <div class="form-group">
                   <label><span class="label label-success">Change to edit</span></label>
-                  <select class="form-control" id="form_1_jenis_divisi" name="jenis_divisi" placeholder="division type">
-                    <option value=""></option>
+                  <select class="form-control" id="form_1_jenis_divisi" name="jenis_divisi" placeholder="location type">
+                    <option value="{{ $result->jenis_divisi }}">{{ $result->jenis_divisi }}. {{ $result->jenis_divisi_nama }} [Selected]</option>
                   </select>
                 </div>
               </div>
@@ -323,6 +348,7 @@
               <div class="form-group">
                 <label><span class="label label-success">Change to edit</span></label>
                 <select class="form-control" id="form_1_jumlah_anak" name="jumlah_anak" placeholder="number of children">
+                  <option value="{{ $result->jumlah_anak }}">{{ $result->jumlah_anak }} [Selected]</option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>

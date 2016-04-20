@@ -16,11 +16,12 @@ class AdminController extends Controller
 
   public function GetEmployeeList()
   {
-		$results = \DB::select('SELECT nip, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pegawai');
-		$results_2 = \DB::select('SELECT id, nip, url, deskripsi, tempat_terjadi, waktu_terjadi, waktu_laporan, pelapor_akun FROM insiden_pegawai ORDER BY created_at DESC LIMIT 0,100');
+		$results = \DB::select('SELECT nip, branch, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pegawai');
+		$results_2 = \DB::select('SELECT id, nip, tipe, url, deskripsi, tempat_terjadi, waktu_terjadi, waktu_laporan, pelapor_akun FROM insiden_pegawai ORDER BY created_at DESC LIMIT 0,100');
 		$results_3 = \DB::select('SELECT id, nip, nama_penugasan, keterangan, catatan_kinerja, tanggal_mulai, tanggal_selesai FROM kinerja_pegawai ORDER BY created_at DESC LIMIT 0,100');
+		$results_4 = \DB::select ('SELECT id, status_cuti, nip, nama_lengkap, pengganti_nip, pengganti_nama, tanggal_mulai, tanggal_selesai FROM data_cuti WHERE status_cuti = ? ORDER BY created_at DESC LIMIT 0,100', ['PENDING']);
 
-		return view('admin.GetEmployeeList')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3);
+		return view('admin.GetEmployeeList')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3)->with('results_4', $results_4);
 	}
 
 	public function GetUserDetail($nip)
@@ -39,7 +40,8 @@ class AdminController extends Controller
 			$results = \DB::select('SELECT * FROM data_pegawai where nip = ?', [$nip]);
 			$provinces = \DB::select('SELECT * FROM data_provinsi');
 			$positions = \DB::select('SELECT * FROM ms_jabatan');
-			return view('admin.GetUserDetailEdit')->with('results', $results)->with('nip', $nip)->with('provinces', $provinces)->with('positions', $positions);
+			$branches = \DB::select('SELECT * FROM ms_branch');
+			return view('admin.GetUserDetailEdit')->with('results', $results)->with('nip', $nip)->with('provinces', $provinces)->with('positions', $positions)->with('branches', $branches);
 		}
 	}
 
@@ -58,8 +60,8 @@ class AdminController extends Controller
 				'nama_lengkap' => 'required|max:512',
 				'provinsi' => 'required',
 				'kota' => 'required',
-				'jenis_jabatan' => 'required',
-				'jenis_divisi' => 'required',
+				'jenis_jabatan' => 'int|required|between:1,4',
+				'jenis_divisi' => 'int|required|between:1,4',
 				'picture' => 'mimes:jpeg|max:300',
 			]);
 
@@ -101,6 +103,7 @@ class AdminController extends Controller
 				\DB::table('data_pegawai')
 					->where('nip', $input['nip'])
 					->update([
+						'branch'  => $input['branch'],
 						'nama_lengkap' => $input['nama_lengkap'],
 						'tanggal_lahir' => $input['tanggal_lahir'],
 						'jenis_kelamin' => $input['jenis_kelamin'],
@@ -207,6 +210,7 @@ class AdminController extends Controller
 				\DB::insert('INSERT INTO insiden_pegawai (
 					url,
 					nip,
+					tipe,
 					deskripsi,
 					tempat_terjadi,
 					waktu_terjadi,
@@ -216,9 +220,10 @@ class AdminController extends Controller
 					pelapor_akun,
 					pelapor_nip,
 					created_at
-				) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', [
 					$input['url'],
 					$input['nip'],
+					$input['tipe'],
 					$input['deskripsi'],
 					$input['tempat_terjadi'],
 					$input['waktu_terjadi'],
@@ -324,6 +329,103 @@ class AdminController extends Controller
 		if (\Request::ajax())
 		{
 			return view('admin.GetExportDetail');
+		}
+	}
+
+	//REQUEST FOR BREAK
+	public function GetRequestBreak()
+	{
+		return view('admin.GetRequestBreak');
+	}
+
+	public function PostRequestBreak()
+	{
+		if (\Request::ajax())
+		{
+			$input = \Request::all();
+
+			$validator = \Validator::make($input, [
+				'nip' => 'required|exists:data_pegawai,nip',
+				'pengganti_nip' => 'required|different:nip|exists:data_pegawai,nip',
+				'tanggal_mulai' => 'required',
+				'tanggal_selesai' => 'required|after:tanggal_mulai',
+				'alasan_cuti' => 'required',
+			]);
+
+			if ($validator->fails())
+			{
+				return view('ajax.Feedback')->withErrors($validator);
+			}
+			else
+			{
+				$date = new \DateTime;
+				$results = \DB::select('SELECT nama_lengkap FROM data_pegawai WHERE nip = ?', [$input['nip']]);
+
+				foreach ($results as $result)
+				{
+					$nama_lengkap = $result->nama_lengkap;
+				}
+
+				$results = \DB::select('SELECT nama_lengkap FROM data_pegawai WHERE nip = ?', [$input['pengganti_nip']]);
+
+				foreach ($results as $result)
+				{
+					$pengganti_nama = $result->nama_lengkap;
+				}
+
+				$supervisor_nama_akun = \Auth::user()->name;
+				$supervisor_nip = \Auth::user()->nip;
+
+				\DB::insert('INSERT INTO data_cuti (
+					status_cuti,
+					nama_lengkap,
+					nip,
+					pengganti_nama,
+					pengganti_nip,
+					supervisor_nama,
+					supervisor_nama_akun,
+					supervisor_nip,
+					tanggal_mulai,
+					tanggal_selesai,
+					alasan_cuti,
+					waktu_pengajuan,
+					created_at,
+					updated_at
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+					'PENDING',
+					$nama_lengkap,
+					$input['nip'],
+					$pengganti_nama,
+					$input['pengganti_nip'],
+					$input['supervisor_nama'],
+					$supervisor_nama_akun,
+					$supervisor_nip,
+					$input['tanggal_mulai'],
+					$input['tanggal_selesai'],
+					$input['alasan_cuti'],
+					$date,
+					$date,
+					$date
+				]);
+			}
+			return 'OK';
+		}
+	}
+
+	public function GetRequestBreakDetail($id)
+	{
+		if (\Request::ajax())
+		{
+			$results = \DB::select('SELECT * FROM data_cuti WHERE id = ?', [$id]);
+
+			foreach ($results as $result)
+			{
+				$nip = $result->nip;
+			}
+
+			$results_2 = \DB::select('SELECT * FROM data_cuti WHERE nip = ? ORDER BY created_at DESC LIMIT 0,100', [$nip]);
+
+			return view('admin.GetRequestBreakDetail')->with('results', $results)->with('results_2', $results_2);
 		}
 	}
 }

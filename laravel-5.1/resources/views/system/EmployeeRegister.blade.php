@@ -88,6 +88,15 @@
                     </div>
 
                     <div class="form-group">
+                      <label>Branch</label>
+                      <select class="form-control" id="form_1_branch" name="branch" placeholder="branch">
+                        @foreach ($results_3 as $result_3)
+                        <option value="{{ $result_3->nama_branch}}">{{ $result_3->nama_branch }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+
+                    <div class="form-group">
                       <label>Full Name</label>
                       <input type="text" class="form-control" id="form_1_nama_lengkap" name="nama_lengkap" placeholder="full name">
                     </div>
@@ -241,7 +250,7 @@
 
                     <div id="form_1_content_jenis_divisi">
                       <div class="form-group">
-                        <label>Division Type</label>
+                        <label>Location Type</label>
                         <select class="form-control" id="form_1_jenis_divisi" name="jenis_divisi" placeholder="division type">
                           <option value=""></option>
                         </select>

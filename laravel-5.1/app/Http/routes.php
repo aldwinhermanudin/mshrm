@@ -48,6 +48,7 @@ Route::post('admin/UserErase', 'Admin\AdminController@PostUserErase');
 
 Route::get('admin/IncidentDetail/{id}', 'Admin\AdminController@GetIncidentDetail');
 Route::get('admin/PerformanceDetail/{id}', 'Admin\AdminController@GetPerformanceDetail');
+Route::get('admin/RequestBreak/{id}', 'Admin\AdminController@GetRequestBreakDetail');
 Route::get('admin/ExportDetail', 'Admin\AdminController@GetExportDetail');
 
 Route::get('ajax/ContentDivision/{kode_jabatan}', 'System\SystemController@GetContentDivision');
@@ -64,6 +65,13 @@ Route::get('admin/ReportIncidentUser/{nip}', 'Admin\AdminController@GetReportInc
 Route::get('admin/ReportPerformance', 'Admin\AdminController@GetReportPerformance');
 Route::post('admin/ReportPerformance', 'Admin\AdminController@PostReportPerformance');
 
+//RequestBreak
+Route::get('admin/RequestBreak', 'Admin\AdminController@GetRequestBreak');
+Route::post('admin/RequestBreak', 'Admin\AdminController@PostRequestBreak');
+
 //Export routes
 Route::get('resources/export/xlsx/EmployeeList', 'System\ResourceController@GetEmployeeListXLSX');
 Route::get('resources/export/pdf/EmployeeList', 'System\ResourceController@GetEmployeeListPDF');
+
+//APP ROUTES
+Route::post('app/setting/lang', 'General\AppController@PostSettingLang');

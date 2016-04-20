@@ -29,6 +29,11 @@
           </div>
 
           <div class="form-group">
+            <label>Branch</label>
+            <p class="form-control-static">{{ $result->branch }}</p>
+          </div>
+
+          <div class="form-group">
             <label>Full Name</label>
             <input type="text" class="form-control" id="form_1_nama_lengkap" name="nama_lengkap" value="{{ $result->nama_lengkap }}" disabled>
           </div>
@@ -140,7 +145,7 @@
           </div>
 
           <div class="form-group">
-            <label>Division Type</label>
+            <label>Location Type</label>
             <p class="form-control-static">{{ $result->jenis_divisi }}. {{ $result->jenis_divisi_nama }}</p>
           </div>
 
