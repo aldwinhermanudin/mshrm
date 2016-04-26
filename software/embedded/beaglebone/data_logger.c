@@ -24,22 +24,32 @@ int sqlQuery(MYSQL *connection, const char *sql_query);
 int sqlSearch( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, char* uid, int uid_row_number);
 int sqlFindUID( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, const char *sql_query, char* uid, int uid_row_number);
 void sqlLogin(char* server_location,char* user_data,char* user_password,char* database_name);
-
+void clearIOQueue();
 // ###################################### DECLARE MYSQL VARIABLE ################################################ //
 
 // ###################################### DECLARE SERIAL VARIABLE ################################################ //
 
-const char*      portACM         = "/dev/ttyACM4";
+const char*      portACM         = "/dev/ttyACM0";
 char 			 bufferRead[READ_SIZE];
 char 			 bufferWrite[WRITE_SIZE];
 int 			 fd;		 // File descriptor for serial port
-void serialStart(const char* portname, speed_t baud, int data);
+int serialStart(const char* portname, speed_t baud, int data);
 void serialRead(int dataRead);
 void serialWrite(const char* data_out, int data_size);
 // ###################################### DECLARE SERIAL VARIABLE ################################################ //
 
 int main(){
-	serialStart(portACM, B9600,READ_SIZE);
+	int serial_open_status = serialStart(portACM, B9600,READ_SIZE);
+	
+	if (serial_open_status){
+		printf("\nArduino Connect Successful\n");
+	}
+	else {
+		
+		printf("\nArduino Connect failed\n");
+		return -1;
+	}
+	
 	sqlLogin("localhost","root","hermanudin","proyek_akhir");
 	mysql_server = mysql_init(NULL);
 	sqlConnect(mysql_server, server, user, password, database);
@@ -48,6 +58,7 @@ int main(){
 	char insertUID[256];
 	
 	while(1){
+		clearIOQueue();
 		serialRead(READ_SIZE);
 		printf("We received %s\n",bufferRead);
 		int found = sqlFindUID(mysql_server,mysql_result,mysql_row,uid_sql_query,bufferRead,2);
@@ -55,7 +66,7 @@ int main(){
 		if (found){
 			printf("We found something\n");
 			// upload log to database
-			sprintf(insertUID,"INSERT INTO class_log (status, card_uid) VALUES ('login', '%s')",bufferRead);
+			sprintf(insertUID,"INSERT INTO class_log (card_uid) VALUES ('%s')",bufferRead);
 			printf("Send data to database.\n");
 			sqlQuery(mysql_server,insertUID);
 			
@@ -70,17 +81,24 @@ int main(){
 			printf("We did not found something\n");
 			// send to serial error
 		}
-		
 		/* close connection */
 	}
 	close(fd);
 	mysql_close(mysql_server);
 }
 
-void serialStart(const char* portname, speed_t baud, int data){
+void clearIOQueue(){
+	tcflush(fd, TCIOFLUSH);
+	usleep(10000);
+}
+int serialStart(const char* portname, speed_t baud, int data){
 	// Open the serial port as read/write, not as controlling terminal, and
 	//   don't block the CPU if it takes too long to open the port.
 	fd = open(portname, O_RDWR | O_NOCTTY );
+	
+	if (fd == -1) {
+      return 0;
+	}
 	
 	struct termios toptions;	// struct to hold the port settings
 	
@@ -124,16 +142,18 @@ void serialStart(const char* portname, speed_t baud, int data){
 	
 	// Flush the input and output buffer one more time.
 	tcflush(fd, TCIOFLUSH);
+	return 1;
 }
 
 void serialRead(int dataRead){
 	// Now, let's wait for an input from the serial port.
+	tcflush(fd, TCIOFLUSH);
 	fcntl(fd, F_SETFL, 0); // block until data comes in
 	read(fd, bufferRead, dataRead);
 }
 
 void serialWrite(const char* data_out, int data_size){
-	
+	tcflush(fd, TCIOFLUSH);
 	sprintf(bufferWrite,"%s\r\n",data_out);
 	int n = write(fd, bufferWrite, data_size+3);
 	if (n < 0)
@@ -150,7 +170,7 @@ int sqlConnect(MYSQL *connection,char * server_location,char * user_admin,char *
 	}
 	
 	else {
-		printf("Connection Successful\n");
+		printf("Database Connection Successful\n");
 		return(0);
 	}
 }
