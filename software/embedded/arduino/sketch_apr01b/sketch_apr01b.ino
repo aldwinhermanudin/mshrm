@@ -174,6 +174,7 @@ void checkFingerMenu(){
       printMenu(26);
       lcd.setCursor(11,1);
       lcd.print(result);
+      delay(2000);
     }
     else {
 

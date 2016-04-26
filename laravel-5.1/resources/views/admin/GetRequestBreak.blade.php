@@ -6,18 +6,18 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
 <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 
-<title>2016 mshrm ⋅ Report Incident</title>
+<title>2016 mshrm ⋅ Request Break / Leave</title>
 
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Report Incident
-            <small>Report an Incident.</small>
+            Request Break / Leave
+            <small>Form To Request Employee's Temporary Break / Leave.</small>
           </h1>
 
           <ol class="breadcrumb">
-            <li><i class="fa fa-dashboard"></i> Report Incident</li>
+            <li><i class="fa fa-dashboard"></i> Request Break</li>
           </ol>
         </section>
 
@@ -28,9 +28,9 @@
               <div class="col-md-6">
                 <div class="box box-info">
 
-                  <form id="form_1" method="post" enctype="multipart/form-data" autocomplete="off">
+                  <form id="form_1" method="post" autocomplete="off">
                     <div class="box-header with-border">
-                      <h3 class="box-title">Add an Employee's Incident Record ⋅ <span class="label label-info">Manually insert data</span></h3>
+                      <h3 class="box-title">Employee's Temporary Break / Leave ⋅ <span class="label label-info">Manually insert data</span></h3>
                       <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                       </div>
@@ -43,48 +43,33 @@
 
                       <div class="form-group">
                         <label>NIP</label>
-                        <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip" autocomplete="off">
+                        <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip">
                       </div>
 
                       <div class="form-group">
-                        <label>Type</label>
-                        <select class="form-control" id="form_1_tipe" name="tipe" placeholder="type">
-                          <option value="INCIDENT">Incident</option>
-                          <option value="ACCIDENT">Accident</option>
-                        </select>
+                        <label>Subtitute's NIP</label>
+                        <input type="text" class="form-control" id="form_1_pengganti_nip" name="pengganti_nip" placeholder="substitute's nip">
                       </div>
 
                       <div class="form-group">
-                        <label>Description</label>
-                        <textarea class="form-control" id="form_1_deskripsi" name="deskripsi" rows="3" placeholder="description"></textarea>
+                        <label>Start Date</label>
+                        <input type="text" class="form-control" id="form_1_tanggal_mulai" name="tanggal_mulai" placeholder="start date">
                       </div>
 
                       <div class="form-group">
-                        <label>Incident Location</label>
-                        <input type="text" class="form-control" id="form_1_tempat_terjadi" name="tempat_terjadi" placeholder="incident location">
+                        <label>End Date</label>
+                        <input type="text" class="form-control" id="form_1_tanggal_selesai" name="tanggal_selesai" placeholder="end date">
                       </div>
 
                       <div class="form-group">
-                        <label>Incident Time</label>
-                        <input type="text" class="form-control" id="form_1_waktu_terjadi" name="waktu_terjadi" placeholder="choose datetime">
+                        <label>Reason</label>
+                        <textarea class="form-control" id="form_1_alasan_cuti " name="alasan_cuti" rows="8" placeholder="reason"></textarea>
                       </div>
 
                       <div class="form-group">
-                        <label>Report Time</label>
-                        <input type="text" class="form-control" id="form_1_waktu_laporan" name="waktu_laporan" placeholder="choose datetime">
+                        <label>Supervisor's Name <em>as secondary reference, primary name reference is taken from this account's data</em></label>
+                        <input type="text" class="form-control" id="form_1_supervisor_nama" name="supervisor_nama" placeholder="supervisor's name">
                       </div>
-
-                      <div class="form-group">
-                        <label for="exampleInputFile">Evidence Photo</label>
-                        <input type="file" id="form_1_evidence" name="evidence">
-                        <p class="help-block">Upload an evidence file in format JPEG.</p>
-                      </div>
-
-                      <div class="form-group">
-                        <label>Reporter's Name</label>
-                        <input type="text" class="form-control" id="form_1_pelapor_nama" name="pelapor_nama" placeholder="reporter's name">
-                      </div>
-
                     </div>
 
                     <div class="box-footer">
@@ -111,23 +96,42 @@
                   <div class="box-footer">
                   </div>
                 </div>
+
+                <div class="box box-success">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Substitute Review</h3>
+                    <div class="box-tools pull-right">
+                      <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                  </div>
+                  <div class="box-body">
+                    <div id="substitute_review">
+                      Substitute Information
+                    </div>
+                  </div>
+                  <div class="box-footer">
+                  </div>
+                </div>
+
               </div>
             </div>
         </section>
 <script>
   $(document).ready(function(){
-    $('#form_1_waktu_terjadi').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm:ss'
+
+    $('#form_1_tanggal_mulai').datetimepicker({
+        format: 'YYYY-MM-DD'
     });
-    $('#form_1_waktu_laporan').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm:ss'
+
+    $('#form_1_tanggal_selesai').datetimepicker({
+        format: 'YYYY-MM-DD'
     });
 
     $("#form_1").submit(function(){
         var formData = new FormData($(this)[0]);
         $("#form_1_button_submit").prop('disabled',true);
         $.ajax({
-            url: '/admin/ReportIncident',
+            url: '/admin/RequestBreak',
             type: 'POST',
             data: formData,
             async: false,
@@ -170,6 +174,26 @@
   			else
   			{
   				$("#employee_review").empty().html("<br/>" + data);
+  			}
+  		});
+  	});
+
+    $("#form_1_pengganti_nip").on('change', function(){
+  		$("#user_feedback").empty().html("<div class='callout callout-info'><h5>Checking.</h5></div>");
+
+  		$.post("/system/EmployeeCheck",
+  		{
+  			_token: $("#form_1_token").val(),
+  			nip: $("#form_1_pengganti_nip").val(),
+  		},
+  		function(data,status){
+  			if (data == 'OK')
+  			{
+          $("#substitute_review").load("/admin/ReportIncidentUser/" + $("#form_1_pengganti_nip").val());
+  			}
+  			else
+  			{
+  				$("#substitute_review").empty().html("<br/>" + data);
   			}
   		});
   	});

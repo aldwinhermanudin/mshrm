@@ -1,11 +1,11 @@
 <?php
 
 Route::get('/', function () {
-    return redirect('/system/UserRegister');
+    return redirect('/admin/EmployeeList');
 });
 
 Route::get('/home', function () {
-    return redirect('/system/UserRegister');
+    return redirect('/admin/EmployeeList');
 });
 
 Route::get('/getstoken', function () {
@@ -16,21 +16,16 @@ Route::get('/admin/EditUserPribadi/{nrp}', function ($nrp) {
 	return $nrp;
 });
 
-Route::get('/system/UserRegister', 'System\SystemController@GetUserRegister');
-Route::post('/system/UserRegister', 'System\SystemController@postUserRegister');
-Route::post('/system/UserRegisterFile', 'System\SystemController@postUserRegisterFile');
-
-Route::get('/system/UserFamily', 'System\SystemController@GetUserFamily');
-Route::post('/system/UserFamily', 'System\SystemController@PostUserFamily');
-Route::post('/system/UserFamilyFile', 'System\SystemController@PostUserFamilyFile');
-
-Route::post('/system/UserFamilyCheck', 'System\SystemController@GetUserFamilyCheck');
-
-Route::get('/system/UserRegisterCheck/{code}', 'System\SystemController@GetUserRegisterCheck');
-Route::post('/system/test', 'System\SystemController@TEST');
-
+//deprecated
 Route::get('/resources/csv/{code}', 'System\ResourceController@GetCSV');
+//deprecated
 
+//new registration routes
+Route::get('/system/EmployeeRegister', 'System\SystemController@GetEmployeeRegister');
+Route::post('/system/EmployeeRegister', 'System\SystemController@PostEmployeeRegister');
+Route::post('/system/EmployeeRegisterFile', 'System\SystemController@PostEmployeeRegisterFile');
+Route::post('/system/EmployeeCheck', 'System\SystemController@PostEmployeeCheck');
+//new registration routes
 
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');
@@ -46,19 +41,20 @@ Route::get('auth/confirm/{token}', 'System\AuthenticationController@GetConfirm')
 Route::post('auth/confirm', 'System\AuthenticationController@PostConfirm');
 
 Route::get('admin/UserDetail/{nip}', 'Admin\AdminController@GetUserDetail');
+Route::get('admin/UserDetailEdit/{nip}', 'Admin\AdminController@GetUserDetailEdit');
 Route::post('admin/UserDetail', 'Admin\AdminController@PostUserDetail');
-Route::post('admin/UserDetailFamily', 'Admin\AdminController@PostUserDetailFamily');
 Route::get('admin/UserErase/{nip}', 'Admin\AdminController@GetUserErase');
 Route::post('admin/UserErase', 'Admin\AdminController@PostUserErase');
 
 Route::get('admin/IncidentDetail/{id}', 'Admin\AdminController@GetIncidentDetail');
 Route::get('admin/PerformanceDetail/{id}', 'Admin\AdminController@GetPerformanceDetail');
+Route::get('admin/RequestBreak/{id}', 'Admin\AdminController@GetRequestBreakDetail');
 Route::get('admin/ExportDetail', 'Admin\AdminController@GetExportDetail');
 
 Route::get('ajax/ContentDivision/{kode_jabatan}', 'System\SystemController@GetContentDivision');
 Route::get('ajax/ContentCity/{kode_provinsi}', 'System\SystemController@GetContentCity');
 
-Route::get('admin/UserList', 'Admin\AdminController@GetUserlist');
+Route::get('admin/EmployeeList', 'Admin\AdminController@GetEmployeeList');
 
 //New routes
 Route::get('admin/ReportIncident', 'Admin\AdminController@GetReportIncident');
@@ -69,10 +65,13 @@ Route::get('admin/ReportIncidentUser/{nip}', 'Admin\AdminController@GetReportInc
 Route::get('admin/ReportPerformance', 'Admin\AdminController@GetReportPerformance');
 Route::post('admin/ReportPerformance', 'Admin\AdminController@PostReportPerformance');
 
-Route::get('admin/WorkHistory', 'Admin\AdminController@GetWorkHistory');
-Route::post('admin/WorkHistory', 'Admin\AdminController@PostWorkHistory');
-Route::post('admin/WorkHistoryEdit', 'Admin\AdminController@PostWorkHistoryEdit');
+//RequestBreak
+Route::get('admin/RequestBreak', 'Admin\AdminController@GetRequestBreak');
+Route::post('admin/RequestBreak', 'Admin\AdminController@PostRequestBreak');
 
 //Export routes
 Route::get('resources/export/xlsx/EmployeeList', 'System\ResourceController@GetEmployeeListXLSX');
 Route::get('resources/export/pdf/EmployeeList', 'System\ResourceController@GetEmployeeListPDF');
+
+//APP ROUTES
+Route::post('app/setting/lang', 'General\AppController@PostSettingLang');

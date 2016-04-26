@@ -145,7 +145,7 @@
     $("#form_1_nip").on('change', function(){
   		$("#user_feedback").empty().html("<div class='callout callout-info'><h5>Checking.</h5></div>");
 
-  		$.post("/system/UserFamilyCheck",
+  		$.post("/system/EmployeeCheck",
   		{
   			_token: $("#form_1_token").val(),
   			nip: $("#form_1_nip").val(),
