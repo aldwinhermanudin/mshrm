@@ -8,8 +8,8 @@
 #include <string.h>
 #include <mysql.h>
 #define UID_SIZE 8
-#define WRITE_SIZE 48
-#define READ_SIZE UID_SIZE
+#define WRITE_SIZE 2048
+#define READ_SIZE 2048
 
 // ###################################### DECLARE MYSQL VARIABLE ################################################ //
 MYSQL *mysql_server;
@@ -33,13 +33,13 @@ const char*      portACM         = "/dev/ttyACM0";
 char 			 bufferRead[READ_SIZE];
 char 			 bufferWrite[WRITE_SIZE];
 int 			 fd;		 // File descriptor for serial port
-int serialStart(const char* portname, speed_t baud, int data);
+int serialStart(const char* portname, speed_t baud);
 void serialRead(int dataRead);
 void serialWrite(const char* data_out, int data_size);
 // ###################################### DECLARE SERIAL VARIABLE ################################################ //
 
 int main(){
-	int serial_open_status = serialStart(portACM, B9600,READ_SIZE);
+	int serial_open_status = serialStart(portACM, B9600);
 	
 	if (serial_open_status){
 		printf("\nArduino Connect Successful\n");
@@ -56,13 +56,29 @@ int main(){
 	
 	const char *uid_sql_query = "SELECT * FROM employee_uid";
 	char insertUID[256];
-	
+/*
+	while(1){
+		clearIOQueue();
+		serialRead(1024);
+		printf("We received %s\n",bufferRead);
+	}
+*/ 
+/*
+	while(1){
+		char input_test_data[100];
+		printf("Enter output data : ");
+		inputData(input_test_data, 100);
+		serialWrite(input_test_data, 8);
+		serialRead(1024);
+		printf("We received %s\n",bufferRead);
+	}
+*/
+
 	while(1){
 		clearIOQueue();
 		serialRead(READ_SIZE);
 		printf("We received %s\n",bufferRead);
 		int found = sqlFindUID(mysql_server,mysql_result,mysql_row,uid_sql_query,bufferRead,2);
-		
 		if (found){
 			printf("We found something\n");
 			
@@ -92,14 +108,17 @@ void clearIOQueue(){
 	tcflush(fd, TCIOFLUSH);
 	usleep(10000);
 }
-int serialStart(const char* portname, speed_t baud, int data){
+int serialStart(const char* portname, speed_t baud){
 	// Open the serial port as read/write, not as controlling terminal, and
 	//   don't block the CPU if it takes too long to open the port.
-	fd = open(portname, O_RDWR | O_NOCTTY );
-	
+	fd = open(portname, O_RDWR | O_NOCTTY);
+		
 	if (fd == -1) {
       return 0;
 	}
+	
+	/* wait for the Arduino to reboot */
+	//usleep(3500000);
 	
 	struct termios toptions;	// struct to hold the port settings
 	
@@ -123,18 +142,27 @@ int serialStart(const char* portname, speed_t baud, int data){
 	toptions.c_cflag |= CREAD ;
 	toptions.c_cflag |= CLOCAL;
 	
-	// disable hardware flow control
-	// toptions.c_cflag &= ~CRTSCTS;
-	
-	// enabled Canonical input. Canonical input is line-oriented
-	toptions.c_iflag |= (ICANON | ECHO | ECHOE);
-	
-	// disabled output processing. Raw data sent.
-	//toptions.c_oflag &= ~OPOST;
-	
-	toptions.c_cc[VMIN] = data; //minimum data received
-	toptions.c_cc[VTIME] = 0;	// time to wait
-	
+	/* no hardware flow control */
+	toptions.c_cflag &= ~CRTSCTS;
+	 
+	/* disable input/output flow control, disable restart chars */
+	toptions.c_iflag &= ~(IXON | IXOFF | IXANY);
+	 
+	/*
+	ICRNL
+	: map CR to NL (otherwise a CR input on the other computer
+	will not terminate input)
+	otherwise make device raw (no other input processing)
+	*/
+	toptions.c_iflag = ICRNL;
+	 
+	 /* disable canonical input, disable echo,
+	 disable visually erase chars,
+	 disable terminal-generated signals */
+	 toptions.c_lflag = ICANON;
+	 /* disable output processing */
+	 toptions.c_oflag =  ~OPOST;
+	 
 	// Now that we've populated our options structure, let's push it back to the
 	//   system.
 	tcsetattr(fd, TCSANOW, &toptions);
@@ -148,17 +176,17 @@ int serialStart(const char* portname, speed_t baud, int data){
 
 void serialRead(int dataRead){
 	// Now, let's wait for an input from the serial port.
-	tcflush(fd, TCIOFLUSH);
+	clearIOQueue();
 	fcntl(fd, F_SETFL, 0); // block until data comes in
 	read(fd, bufferRead, dataRead);
 }
 
 void serialWrite(const char* data_out, int data_size){
-	tcflush(fd, TCIOFLUSH);
-	sprintf(bufferWrite,"%s\r\n",data_out);
-	int n = write(fd, bufferWrite, data_size+3);
+	clearIOQueue();
+	sprintf(bufferWrite,"%s",data_out);
+	int n = write(fd, bufferWrite, data_size);
 	if (n < 0)
-		fputs("write() of 4 bytes failed!\n", stderr);
+		fputs("write() failed!\n", stderr);
 }
 
 
