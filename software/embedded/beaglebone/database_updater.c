@@ -38,8 +38,8 @@ int sqlQueryCheck( MYSQL *connection, const char *sql_query);
 
 int main() {
 	
-	sqlServerLogin("localhost","root","hermanudin","anssip");
-	sqlLocalLogin("localhost","root","hermanudin","proyek_akhir");
+	sqlServerLogin("localhost","root","hermanudin","mshrm_server");
+	sqlLocalLogin("localhost","root","hermanudin","mshrm_client");
 	server_main_connection = mysql_init(NULL);
 	local_main_connection = mysql_init(NULL);
 	
@@ -49,17 +49,17 @@ int main() {
 	sqlConnect(server_main_connection, server_ip, server_user, server_password, server_database);
 	sqlConnect(local_main_connection, local_ip, local_user, local_password, local_database);
 	
-	char upload_query[MAX_QUERY_BYTE] = "SELECT * FROM class_log LIMIT 1";			
+	char upload_query[MAX_QUERY_BYTE] = "SELECT * FROM work_log LIMIT 1";			
 	char upload_check_query[MAX_QUERY_BYTE];
 	while(1){
 		
-		if(sqlQueryCheck(local_main_connection, "SELECT * FROM class_log LIMIT 1")){
+		if(sqlQueryCheck(local_main_connection, "SELECT * FROM work_log LIMIT 1")){
 				
 			// upload to remote server
 			int upload_status = sqlDataUpload(local_main_connection, server_main_connection,upload_query);
 			
 			// check if data is uploaded, then delete the data in the local server
-			sprintf(upload_check_query,"SELECT * FROM class_log where card_uid='%s' AND timestamp='%s'",row_local_result[UID_COLUMN],row_local_result[TIMESTAMP_COLUMN]);
+			sprintf(upload_check_query,"SELECT * FROM work_log where uid='%s' AND timestamp='%s'",row_local_result[UID_COLUMN],row_local_result[TIMESTAMP_COLUMN]);
 			int upload_check = sqlDataUploadCheck(local_main_connection, server_main_connection,upload_check_query);
 			
 			// check for successful upload
@@ -68,7 +68,8 @@ int main() {
 				printf("%s %s",row_local_result[UID_COLUMN],row_local_result[TIMESTAMP_COLUMN]);
 				printf("\nUpload Success");
 				printf("\nWait 0.01s.\n");
-				usleep(10000);
+				//usleep(10000);
+				sleep(5);
 			}
 			
 			else {
@@ -171,7 +172,7 @@ int sqlDataUpload( MYSQL *local_connection, MYSQL *server_connection, const char
 		sprintf(row_local_result[TIMESTAMP_COLUMN],"%s",row_data[TIMESTAMP_COLUMN]);
 		
 		// SQL query to insert data to main server
-		sprintf(insert_data_query,"INSERT INTO class_log (card_uid,timestamp) VALUES ('%s','%s')",row_data[UID_COLUMN], row_data[TIMESTAMP_COLUMN]);
+		sprintf(insert_data_query,"INSERT INTO work_log (uid,timestamp) VALUES ('%s','%s')",row_data[UID_COLUMN], row_data[TIMESTAMP_COLUMN]);
 		sqlQuery(server_connection,insert_data_query);
 		row_exist = 1;
 	}
@@ -198,7 +199,7 @@ int sqlDataUploadCheck( MYSQL *local_connection, MYSQL *server_connection, const
 	
 	if((row_data = mysql_fetch_row(result)) != NULL){
 		found_state = 1;
-		sprintf(delete_data_query,"DELETE FROM class_log where card_uid='%s' AND timestamp='%s'",row_data[UID_COLUMN], row_data[TIMESTAMP_COLUMN]);
+		sprintf(delete_data_query,"DELETE FROM work_log where uid='%s' AND timestamp='%s'",row_data[UID_COLUMN], row_data[TIMESTAMP_COLUMN]);
 		sqlQuery(local_connection,delete_data_query);
 	}
 	mysql_free_result(result);

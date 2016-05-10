@@ -12,30 +12,31 @@
 #define READ_SIZE 2048
 
 // ###################################### DECLARE MYSQL VARIABLE ################################################ //
-MYSQL *mysql_server;
-MYSQL_RES *mysql_result;
-MYSQL_ROW mysql_row;
-char *server;
-char *user;
-char *password;
-char *database;
-int sqlConnect(MYSQL *connection,char * server_location,char * user_admin,char * password_admin,char * database_server);
-int sqlQuery(MYSQL *connection, const char *sql_query);
-int sqlSearch( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, char* uid, int uid_row_number);
-int sqlFindUID( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, const char *sql_query, char* uid, int uid_row_number);
-void sqlLogin(char* server_location,char* user_data,char* user_password,char* database_name);
-void clearIOQueue();
+MYSQL 		*mysql_server;
+MYSQL_RES 	*mysql_result;
+MYSQL_ROW 	mysql_row;
+char		database_data[5][READ_SIZE];
+char 		*server;
+char 		*user;
+char 		*password;
+char		*database;
+int 		sqlConnect		(MYSQL *connection,char * server_location,char * user_admin,char * password_admin,char * database_server);
+int 		sqlQuery		(MYSQL *connection, const char *sql_query);
+int 		sqlSearch		(MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, char* uid, int uid_row_number);
+int 		sqlFindUID		(MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, const char *sql_query, char* uid, int uid_row_number);
+void 		sqlLogin		(char* server_location,char* user_data,char* user_password,char* database_name);
+void 		clearIOQueue	();
 // ###################################### DECLARE MYSQL VARIABLE ################################################ //
 
 // ###################################### DECLARE SERIAL VARIABLE ################################################ //
 
-const char*      portACM         = "/dev/ttyACM0";
-char 			 bufferRead[READ_SIZE];
-char 			 bufferWrite[WRITE_SIZE];
-int 			 fd;		 // File descriptor for serial port
-int serialStart(const char* portname, speed_t baud);
-void serialRead(int dataRead);
-void serialWrite(const char* data_out, int data_size);
+const char*	portACM         = "/dev/ttyACM0";
+char 		bufferRead[READ_SIZE];
+char 		bufferWrite[WRITE_SIZE];
+int			fd;		 // File descriptor for serial port
+int 		serialStart	(const char* portname, speed_t baud);
+void 		serialRead	(int dataRead);
+void 		serialWrite	(const char* data_out, int data_size);
 // ###################################### DECLARE SERIAL VARIABLE ################################################ //
 
 int main(){
@@ -56,34 +57,18 @@ int main(){
 	
 	const char *uid_sql_query = "SELECT * FROM employee_uid";
 	char insertUID[256];
-/*
-	while(1){
-		clearIOQueue();
-		serialRead(1024);
-		printf("We received %s\n",bufferRead);
-	}
-*/ 
-/*
-	while(1){
-		char input_test_data[100];
-		printf("Enter output data : ");
-		inputData(input_test_data, 100);
-		serialWrite(input_test_data, 8);
-		serialRead(1024);
-		printf("We received %s\n",bufferRead);
-	}
-*/
 
 	while(1){
 		clearIOQueue();
 		serialRead(READ_SIZE);
 		printf("We received %s\n",bufferRead);
-		int found = sqlFindUID(mysql_server,mysql_result,mysql_row,uid_sql_query,bufferRead,2);
+		int found = sqlFindUID(mysql_server,mysql_result,mysql_row,uid_sql_query,bufferRead,3);
 		if (found){
+			printf("Belongs to %s\n",database_data[1]);
 			printf("We found something\n");
 			
 			// upload log to database
-			sprintf(insertUID,"INSERT INTO work_log (uid) VALUES ('%s')",bufferRead);
+			sprintf(insertUID,"INSERT INTO work_log (uid) VALUES ('%s')",database_data[2]);
 			printf("Send data to database.\n");
 			sqlQuery(mysql_server,insertUID);
 			
@@ -91,7 +76,7 @@ int main(){
 			printf("Wait 7 Seconds\n");
 			sleep(7);
 			printf("Print ok to Serial\n");
-			serialWrite("o",1);
+			serialWrite("2a12e8a5",8);
 		}
 		
 		else if (!found){
@@ -179,6 +164,7 @@ void serialRead(int dataRead){
 	clearIOQueue();
 	fcntl(fd, F_SETFL, 0); // block until data comes in
 	read(fd, bufferRead, dataRead);
+	bufferRead[strlen(bufferRead)-1] = '\0';
 }
 
 void serialWrite(const char* data_out, int data_size){
@@ -224,6 +210,11 @@ int sqlSearch( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, char* u
 		
 		if (strcmp(uid,row_data[uid_row_number]) == 0){
 			//printf("%s \n", row_data[1]);
+			strcpy(database_data[0], row_data[0]);
+			strcpy(database_data[1], row_data[1]);
+			strcpy(database_data[2], row_data[2]);
+			strcpy(database_data[3], row_data[3]);
+			strcpy(database_data[4], row_data[4]);			
 			found_state = 1;
 		}
 	}
