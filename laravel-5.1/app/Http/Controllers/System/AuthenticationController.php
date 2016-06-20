@@ -9,9 +9,20 @@ use mshrm\Http\Controllers\Controller;
 
 class AuthenticationController extends Controller
 {
+	public function GetRegister()
+	{
+		$app_codes = \DB::select('SELECT * FROM setting_aplikasi_boolean WHERE code = ?', [101]);
+
+		if ($app_codes[0]->value) {
+			return view ('auth.register');
+		}
+		else {
+			return view ('auth.registerClosed');
+		}
+	}
 	public function PostAccountRegister()
 	{
-        if (\Request::ajax())
+		if (\Request::ajax())
 		{
 			$input = \Request::all();
 
@@ -56,13 +67,27 @@ class AuthenticationController extends Controller
 						role_4,
 						role_5,
 						role_6,
+						role_7,
+						role_8,
+						role_9,
+						role_10,
+						role_11,
+						role_12,
+					  role_13,
 						created_at,
 						updated_at
-					) values (?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+					) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
 						$input['nip'],
 						$input['name'],
 						$input['email'],
 						$password_hashed,
+						false,
+						false,
+						false,
+						false,
+						false,
+						false,
+						false,
 						false,
 						false,
 						false,
@@ -146,7 +171,7 @@ class AuthenticationController extends Controller
 
 	public function PostConfirm()
 	{
-        if (\Request::ajax())
+		if (\Request::ajax())
 		{
 			$input = \Request::all();
 
@@ -176,7 +201,8 @@ class AuthenticationController extends Controller
 
 				\DB::delete('DELETE FROM password_reset where email = ?', [$email]);
 
-return 'OK';
+				return 'OK';
+
 			}
 		}
 	}

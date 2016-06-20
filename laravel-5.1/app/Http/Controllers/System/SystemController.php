@@ -446,16 +446,123 @@ class SystemController extends Controller
 			//if authenticated and authorized
 			//echo "can access!";
 
-			$input = \Input::all();
-
-			if (isset($input['superadmin']))
+			if (\Request::ajax())
 			{
-				return "TRUE!";
+				$input = \Input::all();
+
+				if (isset($input['superadmin'])) $privileges_options['superadmin'] = true;
+				else $privileges_options['superadmin'] = false;
+
+				if (isset($input['role_1'])) $privileges_options['role_1'] = true;
+				else $privileges_options['role_1'] = false;
+
+				if (isset($input['role_2'])) $privileges_options['role_2'] = true;
+				else $privileges_options['role_2'] = false;
+
+				if (isset($input['role_3'])) $privileges_options['role_3'] = true;
+				else $privileges_options['role_3'] = false;
+
+				if (isset($input['role_4'])) $privileges_options['role_4'] = true;
+				else $privileges_options['role_4'] = false;
+
+				if (isset($input['role_5'])) $privileges_options['role_5'] = true;
+				else $privileges_options['role_5'] = false;
+
+				if (isset($input['role_6'])) $privileges_options['role_6'] = true;
+				else $privileges_options['role_6'] = false;
+
+				if (isset($input['role_7'])) $privileges_options['role_7'] = true;
+				else $privileges_options['role_7'] = false;
+
+				if (isset($input['role_8'])) $privileges_options['role_8'] = true;
+				else $privileges_options['role_8'] = false;
+
+				if (isset($input['role_9'])) $privileges_options['role_9'] = true;
+				else $privileges_options['role_9'] = false;
+
+				if (isset($input['role_10'])) $privileges_options['role_10'] = true;
+				else $privileges_options['role_10'] = false;
+
+				$validator = \Validator::make($input, [
+					'nip' => 'required|max:128|unique:users',
+					'email' => 'required|email|max:256|unique:users',
+					'name' => 'required|max:512',
+				]);
+
+				if ($validator->fails())
+				{
+					return view('ajax.Feedback')->withErrors($validator);
+				}
+				else
+				{
+					$password_plain = 'MITRA_SIAGA_'.str_random(10);
+					$password_hashed = bcrypt($password_plain);
+					$email = $input['email'];
+					$nama_lengkap = $input['name'];
+
+					$data['password'] = $password_plain;
+					$data['email'] = $input['email'];
+					$data['name'] = $input['name'];
+
+					$date = new \DateTime;
+
+					\Mail::send('emails.AccountRegister', $data, function($message) use ($email, $nama_lengkap)
+					{
+						$message->to($email, $nama_lengkap)->subject('Welcome!');
+					});
+
+					\DB::insert('INSERT INTO users (
+							nip,
+							name,
+							email,
+							password,
+							superadmin,
+							role_1,
+							role_2,
+							role_3,
+							role_4,
+							role_5,
+							role_6,
+							role_7,
+							role_8,
+							role_9,
+							role_10,
+							role_11,
+							role_12,
+						  role_13,
+							created_at,
+							updated_at
+						) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+							$input['nip'],
+							$input['name'],
+							$input['email'],
+							$password_hashed,
+							$privileges_options['superadmin'],
+							$privileges_options['role_1'],
+							$privileges_options['role_2'],
+							$privileges_options['role_3'],
+							$privileges_options['role_4'],
+							$privileges_options['role_5'],
+							$privileges_options['role_6'],
+							$privileges_options['role_7'],
+							$privileges_options['role_8'],
+							$privileges_options['role_9'],
+							$privileges_options['role_10'],
+							false,
+							false,
+							false,
+							$date,
+							$date
+					]);
+
+					return 'OK';
+				}
 			}
 			else {
-				return "FALSE!";
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
 			}
-			
 		}
 		else
 		{
@@ -472,7 +579,9 @@ class SystemController extends Controller
 		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_2 == true))
 		{
 			//if authenticated and authorized
-			return view ('system.AccountEdit');
+
+			$results = \DB::select('SELECT id, nip, name, email, superadmin, updated_at FROM users');
+			return view ('system.AccountEdit')->with('results', $results);
 		}
 		else
 		{
@@ -489,10 +598,107 @@ class SystemController extends Controller
 		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_2 == true))
 		{
 			//if authenticated and authorized
-			echo "can access!";
+			if (\Request::ajax()) {
+
+				$input = \Input::all();
+
+				if (isset($input['role_1'])) $privileges_options['role_1'] = true;
+				else $privileges_options['role_1'] = false;
+
+				if (isset($input['role_2'])) $privileges_options['role_2'] = true;
+				else $privileges_options['role_2'] = false;
+
+				if (isset($input['role_3'])) $privileges_options['role_3'] = true;
+				else $privileges_options['role_3'] = false;
+
+				if (isset($input['role_4'])) $privileges_options['role_4'] = true;
+				else $privileges_options['role_4'] = false;
+
+				if (isset($input['role_5'])) $privileges_options['role_5'] = true;
+				else $privileges_options['role_5'] = false;
+
+				if (isset($input['role_6'])) $privileges_options['role_6'] = true;
+				else $privileges_options['role_6'] = false;
+
+				if (isset($input['role_7'])) $privileges_options['role_7'] = true;
+				else $privileges_options['role_7'] = false;
+
+				if (isset($input['role_8'])) $privileges_options['role_8'] = true;
+				else $privileges_options['role_8'] = false;
+
+				if (isset($input['role_9'])) $privileges_options['role_9'] = true;
+				else $privileges_options['role_9'] = false;
+
+				if (isset($input['role_10'])) $privileges_options['role_10'] = true;
+				else $privileges_options['role_10'] = false;
+
+				\DB::table('users')
+					->where('nip', $input['nip'])
+					->update([
+						'role_1'  => $privileges_options['role_1'],
+						'role_2'  => $privileges_options['role_2'],
+						'role_3'  => $privileges_options['role_3'],
+						'role_4'  => $privileges_options['role_4'],
+						'role_5'  => $privileges_options['role_5'],
+						'role_6'  => $privileges_options['role_6'],
+						'role_7'  => $privileges_options['role_7'],
+						'role_8'  => $privileges_options['role_8'],
+						'role_9'  => $privileges_options['role_9'],
+						'role_10'  => $privileges_options['role_10']
+				]);
+
+				return 'OK';
+			}
+			else {
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
+			}
 		}
 		else
 		{
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function GetAccountDetail($nip)
+	{
+		if ((\Auth::user()->superadmin == true) OR (\Auth::user()->role_2 == true)) {
+			if (\Request::ajax()) {
+				$results = \DB::select('SELECT
+					id,
+					nip,
+					name,
+					email,
+					superadmin,
+					role_1,
+					role_2,
+					role_3,
+					role_4,
+					role_5,
+					role_6,
+					role_7,
+					role_8,
+					role_9,
+					role_10,
+					role_11,
+					role_12,
+					role_13,
+					updated_at
+				  FROM users WHERE nip = ?', [$nip]
+			 	);
+
+				return view('system.AccountDetail')->with('results', $results)->with('nip', $nip);
+			}
+			else {
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
+			}
+		}
+		else {
 			//if not authenticated and not authorized
 			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
 			return redirect ('/system/SystemNotification')->with('message', $message);

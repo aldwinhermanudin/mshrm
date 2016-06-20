@@ -26,21 +26,23 @@ Route::post('/system/EmployeeRegister', 'System\SystemController@PostEmployeeReg
 Route::post('/system/EmployeeRegisterFile', 'System\SystemController@PostEmployeeRegisterFile');
 Route::post('/system/EmployeeCheck', 'System\SystemController@PostEmployeeCheck');
 
-//SUPER NEW ROUTES
+//Account operations inside the application
 Route::get('/system/AccountRegister', 'System\SystemController@GetAccountRegister');
 Route::post('/system/AccountRegister', 'System\SystemController@PostAccountRegister');
 Route::get('/system/AccountEdit', 'System\SystemController@GetAccountEdit');
 Route::post('/system/AccountEdit', 'System\SystemController@PostAccountEdit');
+Route::get('/system/AccountDetail/{nip}', 'System\SystemController@GetAccountDetail');
+Route::post('/system/AccountDelete', 'System\SystemController@PostAccountDelete');
+//Route::post('/system/AccountDetail', 'System\SystemController@PostAccountDetail');
 
 Route::get('/system/SystemNotification', 'System\SystemController@GetSystemNotification');
-//SUPER NEW ROUTES END
 
 //new registration routes
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
-Route::get('auth/register', 'Auth\AuthController@getRegister');
+Route::get('auth/register', 'System\AuthenticationController@GetRegister');
 Route::post('auth/register', 'System\AuthenticationController@PostAccountRegister');
 Route::get('auth/password', 'System\AuthenticationController@GetPassword');
 Route::post('auth/password', 'System\AuthenticationController@PostPassword');
@@ -69,11 +71,11 @@ Route::get('admin/ReportIncident', 'Admin\AdminController@GetReportIncident');
 Route::post('admin/ReportIncident', 'Admin\AdminController@PostReportIncident');
 Route::get('admin/ReportIncidentUser/{nip}', 'Admin\AdminController@GetReportIncidentUser');
 
-//Super new routes
+//Report performance
 Route::get('admin/ReportPerformance', 'Admin\AdminController@GetReportPerformance');
 Route::post('admin/ReportPerformance', 'Admin\AdminController@PostReportPerformance');
 
-//RequestBreak
+//Request break
 Route::get('admin/RequestBreak', 'Admin\AdminController@GetRequestBreak');
 Route::post('admin/RequestBreak', 'Admin\AdminController@PostRequestBreak');
 
