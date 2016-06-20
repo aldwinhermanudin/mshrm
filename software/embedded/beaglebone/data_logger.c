@@ -1,226 +1,165 @@
-#include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <sys/time.h>
-#include <string.h>
-#include <mysql.h>
-#define UID_SIZE 8
-#define WRITE_SIZE 48
-#define READ_SIZE UID_SIZE
-
-// ###################################### DECLARE MYSQL VARIABLE ################################################ //
-MYSQL *mysql_server;
-MYSQL_RES *mysql_result;
-MYSQL_ROW mysql_row;
-char *server;
-char *user;
-char *password;
-char *database;
-int sqlConnect(MYSQL *connection,char * server_location,char * user_admin,char * password_admin,char * database_server);
-int sqlQuery(MYSQL *connection, const char *sql_query);
-int sqlSearch( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, char* uid, int uid_row_number);
-int sqlFindUID( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, const char *sql_query, char* uid, int uid_row_number);
-void sqlLogin(char* server_location,char* user_data,char* user_password,char* database_name);
-
-// ###################################### DECLARE MYSQL VARIABLE ################################################ //
-
-// ###################################### DECLARE SERIAL VARIABLE ################################################ //
-
-const char*      portACM         = "/dev/ttyACM4";
-char 			 bufferRead[READ_SIZE];
-char 			 bufferWrite[WRITE_SIZE];
-int 			 fd;		 // File descriptor for serial port
-void serialStart(const char* portname, speed_t baud, int data);
-void serialRead(int dataRead);
-void serialWrite(const char* data_out, int data_size);
-// ###################################### DECLARE SERIAL VARIABLE ################################################ //
-
+#include "include/mshrm_mysql.h"
+#include "include/mshrm_communication.h"
+// TODO : Not sure if need a checking on when querying to remote server
 int main(){
-	serialStart(portACM, B9600,READ_SIZE);
-	sqlLogin("localhost","root","hermanudin","proyek_akhir");
-	mysql_server = mysql_init(NULL);
-	sqlConnect(mysql_server, server, user, password, database);
 	
-	const char *uid_sql_query = "SELECT * FROM user_uid";
-	char insertUID[256];
+	serialConnect(portACM, B9600);
+	setSQLConfiguration();
+	char main_query[MAX_QUERY_BYTE];
 	
 	while(1){
+		clearIOQueue();	
 		serialRead(READ_SIZE);
-		printf("We received %s\n",bufferRead);
-		int found = sqlFindUID(mysql_server,mysql_result,mysql_row,uid_sql_query,bufferRead,2);
+		printf("\nWe received\t: %s\n",bufferRead);
 		
-		if (found){
-			printf("We found something\n");
-			// upload log to database
-			sprintf(insertUID,"INSERT INTO class_log (status, card_uid) VALUES ('login', '%s')",bufferRead);
-			printf("Send data to database.\n");
-			sqlQuery(mysql_server,insertUID);
+		if (decodeMessage(bufferRead) != 0){
+			serialWriteErrorMessage("Incorrect message format");
+			printf("Incorrect message format\n");
+			continue;
+		} 
+		
+		else { 
+			printf("Message Status\t: %s\n",messageStatus);
+			printf("Message Payload\t: %s\n\n",messagePayload);
 			
-			// send to serial accepted
-			printf("Wait 7 Seconds\n");
-			sleep(7);
-			printf("Print ok to Serial\n");
-			serialWrite("o",1);
+			if (strcmp(messageStatus, "00") == 0){
+				printf ("Looking for the '.' character in \"%s\"...\n",messagePayload);
+				char decoded_payload_messages[7][32];
+				int dot_location[6];
+				int valid_format = 0;
+				int i = 0;
+				char * pch;
+				pch=strchr(messagePayload,'.');
+				while (pch!=NULL){
+					printf ("found at %ld\n",(pch-messagePayload));
+					dot_location[i] = (pch-messagePayload);
+					pch=strchr(pch+1,'.');
+					i++;
+					valid_format++;
+				}
+				
+				if (valid_format != 6){
+					serialWriteErrorMessage("Incorrect payload format");
+					printf("Incorrect payload format\n");
+					continue;
+				}
+									
+				strncpy(decoded_payload_messages[0], &messagePayload[0], dot_location[0]);
+				decoded_payload_messages[0][dot_location[0]] = '\0';
+				for(i=1;i <= 5; i++){
+					strncpy(decoded_payload_messages[i], &messagePayload[dot_location[i-1]+1],dot_location[i]-dot_location[i-1]-1);
+					decoded_payload_messages[i][dot_location[i]-dot_location[i-1]-1] = '\0';
+				}
+				strncpy(decoded_payload_messages[6], &messagePayload[dot_location[5]+1], 2);
+				decoded_payload_messages[6][2] = '\0';
+				
+				sprintf(main_query, "SELECT * FROM employee_uid where flash_id='%s'",decoded_payload_messages[0]);
+				int found = sqlQueryCheck(local_main_connection,main_query);
+				if (found){
+					sqlFetchDataToArray(local_main_connection,main_query,1,5);
+					printf("We found something\n");
+					printf("Belongs to %s\n",sql_fetched_data[0][1]);
+					
+					// Upload log to database
+					char local_timestamp[32];
+					sprintf(local_timestamp, "%s-%s-%s %s:%s:%s",decoded_payload_messages[3],decoded_payload_messages[2],decoded_payload_messages[1],decoded_payload_messages[4],decoded_payload_messages[5],decoded_payload_messages[6]);
+					sprintf(main_query,"INSERT INTO work_log (uid,timestamp) VALUES ('%s','%s')",sql_fetched_data[0][0],local_timestamp);
+					printf("Uploading %s and %s to Local Database\n", sql_fetched_data[0][0],local_timestamp);
+					sqlQuery(local_main_connection,main_query);
+					
+					// Sending OK message to serial port
+					printf("Sending OK message\n");
+					serialWriteSuccessMessage(sql_fetched_data[0][2]);
+				}
+				
+				else if (!found){
+					serialWriteErrorMessage(":02,ID Not Found;");
+					printf("We did not found something\n");
+					// send to serial error
+				}				
+			}
+			
+			else if (strcmp(messageStatus, "01") == 0){
+				sprintf(main_query, "SELECT * from device_information where configuration='admin_password'");
+				int found = sqlQueryCheck(local_main_connection, main_query);
+				if (found){
+					sqlFetchDataToArray(local_main_connection, main_query , 1, 3);
+					
+					// Sending OK message to serial port
+					printf("Sending OK message\n");
+					serialWriteSuccessMessage(sql_fetched_data[0][2]);
+				}
+				
+				else {
+					serialWriteErrorMessage(":02,Not Found;");
+					printf("We did not found something\n");
+					// send to serial error
+				}				
+			}
+			
+			else if (strcmp(messageStatus, "03") == 0){
+				
+				sprintf(main_query, "SELECT * from employee_uid");
+				int found = sqlQueryCheck(local_main_connection, main_query);
+				if (found){
+					int flash_id_total = sqlFetchDataToArray(local_main_connection, main_query , MAX_EMPLOYEE, 5);
+					int i = 0;
+					int flash_id[MAX_EMPLOYEE];
+					for(i = 0; i < flash_id_total; i++){
+						flash_id[i] = atoi(sql_fetched_data[i][3]);
+					}
+					int available_flash_id = findMissing(flash_id, flash_id_total);
+					char available_flash_id_in_char[8];
+					printf("Available Flash ID is %d ", available_flash_id);	
+					// Sending OK message to serial port
+					printf("Sending OK message\n");
+					sprintf(available_flash_id_in_char,"%d",available_flash_id);
+					serialWriteSuccessMessage(available_flash_id_in_char);
+				}
+				
+				else {
+					serialWriteErrorMessage(":02,Not Found;");
+					printf("We did not found something\n");
+					// send to serial error
+				}
+			}
+			
+			else if (strcmp(messageStatus, "04") == 0){
+				printf ("Looking for the '.' character in \"%s\"...\n",messagePayload);
+				char decoded_payload_messages[2][32];
+				int dot_location;
+				char * pch;
+				pch=strchr(messagePayload,'.');
+				if (pch!=NULL){
+					printf ("found at %ld\n",(pch-messagePayload));
+					dot_location = (pch-messagePayload);
+				}
+				
+				else {
+					serialWriteErrorMessage("Incorrect payload format");
+					printf("Incorrect payload format\n");
+					continue;
+				}
+									
+				strncpy(decoded_payload_messages[0], messagePayload, dot_location);
+				decoded_payload_messages[0][dot_location] = '\0';
+				strcpy(decoded_payload_messages[1], &messagePayload[dot_location+1]);
+				
+				sprintf(main_query,"INSERT INTO employee_uid (flash_id, uid) VALUES ('%s','%s')",decoded_payload_messages[0],decoded_payload_messages[1]);
+				printf("Inserting data : %s %s\n", decoded_payload_messages[0],decoded_payload_messages[1]);
+				sqlQuery(local_main_connection,main_query);
+				serialWriteSuccessMessage("OK");
+			}
+			
+			else{
+				serialWriteErrorMessage("Unknown Code");
+				printf("Unknown Code\n");
+				continue;
+			}
 		}
-		
-		else if (!found){
-			printf("We did not found something\n");
-			// send to serial error
-		}
-		
-		/* close connection */
 	}
 	close(fd);
-	mysql_close(mysql_server);
+	mysql_close(local_main_connection);
+	mysql_close(server_main_connection);
 }
-
-void serialStart(const char* portname, speed_t baud, int data){
-	// Open the serial port as read/write, not as controlling terminal, and
-	//   don't block the CPU if it takes too long to open the port.
-	fd = open(portname, O_RDWR | O_NOCTTY );
-	
-	struct termios toptions;	// struct to hold the port settings
-	
-	// Fetch the current port settings
-	tcgetattr(fd, &toptions);
-	
-	// Set Input and Output BaudRate
-	cfsetispeed(&toptions, baud);
-	cfsetospeed(&toptions, baud);
-	
-	// Set up the frame information.
-	toptions.c_cflag &= ~PARENB;	// no parity
-	toptions.c_cflag &= ~CSTOPB;	// one stop bit
-	toptions.c_cflag &= ~CSIZE;		// clear frame size info
-	toptions.c_cflag |= CS8;		// 8 bit frames
-	
-	// c_cflag contains a few important things- CLOCAL and CREAD, to prevent
-	// this program from "owning" the port and to enable receipt of data.
-	// Also, it holds the settings for number of data bits, parity, stop bits,
-	// and hardware flow control.
-	toptions.c_cflag |= CREAD ;
-	toptions.c_cflag |= CLOCAL;
-	
-	// disable hardware flow control
-	// toptions.c_cflag &= ~CRTSCTS;
-	
-	// enabled Canonical input. Canonical input is line-oriented
-	toptions.c_iflag |= (ICANON | ECHO | ECHOE);
-	
-	// disabled output processing. Raw data sent.
-	//toptions.c_oflag &= ~OPOST;
-	
-	toptions.c_cc[VMIN] = data; //minimum data received
-	toptions.c_cc[VTIME] = 0;	// time to wait
-	
-	// Now that we've populated our options structure, let's push it back to the
-	//   system.
-	tcsetattr(fd, TCSANOW, &toptions);
-	
-	usleep(1000000);
-	
-	// Flush the input and output buffer one more time.
-	tcflush(fd, TCIOFLUSH);
-}
-
-void serialRead(int dataRead){
-	// Now, let's wait for an input from the serial port.
-	fcntl(fd, F_SETFL, 0); // block until data comes in
-	read(fd, bufferRead, dataRead);
-}
-
-void serialWrite(const char* data_out, int data_size){
-	
-	sprintf(bufferWrite,"%s\r\n",data_out);
-	int n = write(fd, bufferWrite, data_size+3);
-	if (n < 0)
-		fputs("write() of 4 bytes failed!\n", stderr);
-}
-
-
-int sqlConnect(MYSQL *connection,char * server_location,char * user_admin,char * password_admin,char * database_server){
-	
-	/* Connect to database */
-	if (!mysql_real_connect(connection, server_location, user_admin, password_admin, database_server, 0, NULL, 0)) {
-		fprintf(stderr, "%s\n", mysql_error(connection));
-		return(-1);
-	}
-	
-	else {
-		printf("Connection Successful\n");
-		return(0);
-	}
-}
-
-int sqlQuery(MYSQL *connection, const char *sql_query){
-	
-	if (mysql_query(connection, sql_query)) {
-		fprintf(stderr, "%s\n", mysql_error(connection));
-		return -1;
-	}
-	
-	else {
-		return 0;
-	}
-}
-
-int sqlSearch( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, char* uid, int uid_row_number){
-	int found_state = 0;
-	result = mysql_use_result(connection);
-	
-	while ((row_data = mysql_fetch_row(result)) != NULL){
-		
-		if (strcmp(uid,row_data[uid_row_number]) == 0){
-			//printf("%s \n", row_data[1]);
-			found_state = 1;
-		}
-	}
-	
-	mysql_free_result(result);
-	return found_state;
-	
-}
-
-int sqlFindUID( MYSQL *connection, MYSQL_RES *result, MYSQL_ROW row_data, const char *sql_query, char* uid, int uid_row_number){
-	sqlQuery(connection,sql_query);
-	return sqlSearch(connection,result,row_data,uid,uid_row_number);
-}
-
-void sqlLogin(char* server_location,char* user_data,char* user_password,char* database_name){
-	
-	server = server_location;
-	user = user_data;
-	password = user_password;
-	database = database_name;
-}
-
-
-/*
-* Arduino Example
-
-void setup() {
-	// initialize both serial ports:
-	Serial.begin(9600);
-	pinMode(A0, INPUT);
-}
-
-void loop() {
-	// read from port 1, send to port 0:
-	if (Serial.available()) {
-		String inByte = Serial.readString();
-		delay(3000);
-		Serial.print("2a22e8d5");
-		
-	}
-	
-	if(digitalRead(A0)){
-		Serial.print("2a12e8d5");
-		delay(5000);
-	}
-	
-}
-
-*/
