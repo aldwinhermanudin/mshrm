@@ -418,4 +418,90 @@ class SystemController extends Controller
 		}
 	}
 
+	//new section of development
+
+	public function GetAccountRegister()
+	{
+		// superadmin can access all, role_1 can register account
+		// read privileges document to for more info
+		if ((\Auth::user()->superadmin == false) or (\Auth::user()->role_1 == false))
+		{
+			//if authenticated and authorized
+			return view ('system.AccountRegister');
+		}
+		else
+		{
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function PostAccountRegister()
+	{
+		// superadmin can access all, role_1 can register account
+		// read privileges document to for more info
+		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_1 == true))
+		{
+			//if authenticated and authorized
+			//echo "can access!";
+
+			$input = \Input::all();
+
+			if (isset($input['superadmin']))
+			{
+				return "TRUE!";
+			}
+			else {
+				return "FALSE!";
+			}
+			
+		}
+		else
+		{
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function GetAccountEdit()
+	{
+		// superadmin can access all, role_1 can register account
+		// read privileges document to for more info
+		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_2 == true))
+		{
+			//if authenticated and authorized
+			return view ('system.AccountEdit');
+		}
+		else
+		{
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function PostAccountEdit()
+	{
+		// superadmin can access all, role_1 can register account
+		// read privileges document to for more info
+		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_2 == true))
+		{
+			//if authenticated and authorized
+			echo "can access!";
+		}
+		else
+		{
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function GetSystemNotification()
+	{
+		return view('system.SystemNotification');
+	}
+
 }

@@ -168,6 +168,23 @@
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
             <li class="header">NAVIGASI</li>
+
+            @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true) or (Auth::user()->role_2 == true))
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-users"></i> <span>Akun</span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true))
+                <li><a href="{{ url('/system/AccountRegister') }}"><i class="fa fa-user-plus"></i> Daftarkan Akun</a></li>
+                @endif
+                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_2 == true))
+                <li><a href="{{ url('/system/AccountEdit') }}"><i class="fa fa-user-plus"></i> Ubah / Atur Akun</a></li>
+                @endif
+              </ul>
+            </li>
+            @endif
+
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-users"></i> <span>Administrasi</span> <i class="fa fa-angle-left pull-right"></i>
@@ -192,7 +209,7 @@
                 <i class="fa fa-users"></i> <span>Ekspor</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a id="button_export" href="#Exports" data-toggle="modal" data-target="#general_modal"><i class="fa fa-user-plus"></i> Exports</a></li>
+                <li><a id="button_export" href="#Exports" data-toggle="modal" data-target="#general_modal"><i class="fa fa-user-plus"></i> Ekspor Data</a></li>
               </ul>
             </li>
           </ul>
@@ -613,6 +630,23 @@
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
             <li class="header">NAVIGATION</li>
+
+            @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true) or (Auth::user()->role_2 == true))
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-users"></i> <span>Accounts</span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true))
+                <li><a href="{{ url('/system/AccountRegister') }}"><i class="fa fa-user-plus"></i> Register Account</a></li>
+                @endif
+                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_2 == true))
+                <li><a href="{{ url('/system/AccountEdit') }}"><i class="fa fa-user-plus"></i> Edit / Set Account</a></li>
+                @endif
+              </ul>
+            </li>
+            @endif
+
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-users"></i> <span>Admin</span> <i class="fa fa-angle-left pull-right"></i>

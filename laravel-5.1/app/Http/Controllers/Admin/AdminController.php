@@ -60,8 +60,8 @@ class AdminController extends Controller
 				'nama_lengkap' => 'required|max:512',
 				'provinsi' => 'required',
 				'kota' => 'required',
-				'jenis_jabatan' => 'int|required|between:1,4',
-				'jenis_divisi' => 'int|required|between:1,4',
+				'jenis_jabatan' => 'int|required|between:1,6',
+				'jenis_divisi' => 'int|required|between:1,6',
 				'picture' => 'mimes:jpeg|max:300',
 			]);
 

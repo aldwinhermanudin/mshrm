@@ -25,15 +25,23 @@ Route::get('/system/EmployeeRegister', 'System\SystemController@GetEmployeeRegis
 Route::post('/system/EmployeeRegister', 'System\SystemController@PostEmployeeRegister');
 Route::post('/system/EmployeeRegisterFile', 'System\SystemController@PostEmployeeRegisterFile');
 Route::post('/system/EmployeeCheck', 'System\SystemController@PostEmployeeCheck');
-//new registration routes
 
+//SUPER NEW ROUTES
+Route::get('/system/AccountRegister', 'System\SystemController@GetAccountRegister');
+Route::post('/system/AccountRegister', 'System\SystemController@PostAccountRegister');
+Route::get('/system/AccountEdit', 'System\SystemController@GetAccountEdit');
+Route::post('/system/AccountEdit', 'System\SystemController@PostAccountEdit');
+
+Route::get('/system/SystemNotification', 'System\SystemController@GetSystemNotification');
+//SUPER NEW ROUTES END
+
+//new registration routes
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'System\AuthenticationController@PostAccountRegister');
-
 Route::get('auth/password', 'System\AuthenticationController@GetPassword');
 Route::post('auth/password', 'System\AuthenticationController@PostPassword');
 
