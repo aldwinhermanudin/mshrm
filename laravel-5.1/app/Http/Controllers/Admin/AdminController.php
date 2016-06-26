@@ -19,7 +19,14 @@ class AdminController extends Controller
 		$results = \DB::select('SELECT nip, branch, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pegawai');
 		$results_2 = \DB::select('SELECT id, nip, tipe, url, deskripsi, tempat_terjadi, waktu_terjadi, waktu_laporan, pelapor_akun FROM insiden_pegawai ORDER BY created_at DESC LIMIT 0,100');
 		$results_3 = \DB::select('SELECT id, nip, nama_penugasan, keterangan, catatan_kinerja, tanggal_mulai, tanggal_selesai FROM kinerja_pegawai ORDER BY created_at DESC LIMIT 0,100');
-		$results_4 = \DB::select ('SELECT id, status_cuti, nip, nama_lengkap, pengganti_nip, pengganti_nama, tanggal_mulai, tanggal_selesai FROM data_cuti WHERE status_cuti = ? ORDER BY created_at DESC LIMIT 0,100', ['PENDING']);
+		$results_4 = 'Content';
+
+		if (\Auth::user()->superadmin OR \Auth::user()->role_8) {
+			$results_4 = \DB::select ('SELECT id, status_cuti, nip, nama_lengkap, pengganti_nip, pengganti_nama, tanggal_mulai, tanggal_selesai FROM data_cuti WHERE status_cuti = ? ORDER BY created_at ASC LIMIT 0,100', ['PENDING']);
+		}
+		else if (\Auth::user()->role_9) {
+			$results_4 = \DB::select ('SELECT id, status_cuti, nip, nama_lengkap, pengganti_nip, pengganti_nama, tanggal_mulai, tanggal_selesai FROM data_cuti WHERE status_cuti = ? AND supervisor = ? ORDER BY created_at ASC LIMIT 0,100', ['PENDING', \Auth::user()->nip]);
+		}
 
 		return view('admin.GetEmployeeList')->with('results', $results)->with('results_2', $results_2)->with('results_3', $results_3)->with('results_4', $results_4);
 	}
@@ -335,80 +342,102 @@ class AdminController extends Controller
 	//REQUEST FOR BREAK
 	public function GetRequestBreak()
 	{
-		return view('admin.GetRequestBreak');
+		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_7)) {
+			return view('admin.GetRequestBreak');
+		}
+		else {
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
 	}
 
 	public function PostRequestBreak()
 	{
-		if (\Request::ajax())
-		{
-			$input = \Request::all();
-
-			$validator = \Validator::make($input, [
-				'nip' => 'required|exists:data_pegawai,nip',
-				'pengganti_nip' => 'required|different:nip|exists:data_pegawai,nip',
-				'tanggal_mulai' => 'required',
-				'tanggal_selesai' => 'required|after:tanggal_mulai',
-				'alasan_cuti' => 'required',
-			]);
-
-			if ($validator->fails())
+		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_7)) {
+			if (\Request::ajax())
 			{
-				return view('ajax.Feedback')->withErrors($validator);
-			}
-			else
-			{
-				$date = new \DateTime;
-				$results = \DB::select('SELECT nama_lengkap FROM data_pegawai WHERE nip = ?', [$input['nip']]);
+				$input = \Request::all();
 
-				foreach ($results as $result)
-				{
-					$nama_lengkap = $result->nama_lengkap;
-				}
-
-				$results = \DB::select('SELECT nama_lengkap FROM data_pegawai WHERE nip = ?', [$input['pengganti_nip']]);
-
-				foreach ($results as $result)
-				{
-					$pengganti_nama = $result->nama_lengkap;
-				}
-
-				$supervisor_nama_akun = \Auth::user()->name;
-				$supervisor_nip = \Auth::user()->nip;
-
-				\DB::insert('INSERT INTO data_cuti (
-					status_cuti,
-					nama_lengkap,
-					nip,
-					pengganti_nama,
-					pengganti_nip,
-					supervisor_nama,
-					supervisor_nama_akun,
-					supervisor_nip,
-					tanggal_mulai,
-					tanggal_selesai,
-					alasan_cuti,
-					waktu_pengajuan,
-					created_at,
-					updated_at
-				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
-					'PENDING',
-					$nama_lengkap,
-					$input['nip'],
-					$pengganti_nama,
-					$input['pengganti_nip'],
-					$input['supervisor_nama'],
-					$supervisor_nama_akun,
-					$supervisor_nip,
-					$input['tanggal_mulai'],
-					$input['tanggal_selesai'],
-					$input['alasan_cuti'],
-					$date,
-					$date,
-					$date
+				$validator = \Validator::make($input, [
+					'nip' => 'required|exists:data_pegawai,nip',
+					'pengganti_nip' => 'required|different:nip|exists:data_pegawai,nip',
+					'tanggal_mulai' => 'required',
+					'tanggal_selesai' => 'required|after:tanggal_mulai',
+					'alasan_cuti' => 'required',
 				]);
+
+				if ($validator->fails())
+				{
+					return view('ajax.Feedback')->withErrors($validator);
+				}
+				else
+				{
+					$date = new \DateTime;
+					$results = \DB::select('SELECT nama_lengkap, supervisor FROM data_pegawai WHERE nip = ?', [$input['nip']]);
+
+					foreach ($results as $result)
+					{
+						$nama_lengkap = $result->nama_lengkap;
+						$supervisor = $result->supervisor;
+					}
+
+					$results = \DB::select('SELECT nama_lengkap FROM data_pegawai WHERE nip = ?', [$input['pengganti_nip']]);
+
+					foreach ($results as $result)
+					{
+						$pengganti_nama = $result->nama_lengkap;
+					}
+
+					$supervisor_nama_akun = \Auth::user()->name;
+					$supervisor_nip = \Auth::user()->nip;
+
+					\DB::insert('INSERT INTO data_cuti (
+						status_cuti,
+						nama_lengkap,
+						nip,
+						supervisor,
+						pengganti_nama,
+						pengganti_nip,
+						supervisor_nama,
+						supervisor_nama_akun,
+						supervisor_nip,
+						tanggal_mulai,
+						tanggal_selesai,
+						alasan_cuti,
+						waktu_pengajuan,
+						created_at,
+						updated_at
+					) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+						'PENDING',
+						$nama_lengkap,
+						$input['nip'],
+						$supervisor,
+						$pengganti_nama,
+						$input['pengganti_nip'],
+						$input['supervisor_nama'],
+						$supervisor_nama_akun,
+						$supervisor_nip,
+						$input['tanggal_mulai'],
+						$input['tanggal_selesai'],
+						$input['alasan_cuti'],
+						$date,
+						$date,
+						$date
+					]);
+				}
+				return 'OK';
 			}
-			return 'OK';
+			else {
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
+			}
+		}
+		else {
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
 		}
 	}
 
@@ -426,6 +455,75 @@ class AdminController extends Controller
 			$results_2 = \DB::select('SELECT * FROM data_cuti WHERE nip = ? ORDER BY created_at DESC LIMIT 0,100', [$nip]);
 
 			return view('admin.GetRequestBreakDetail')->with('results', $results)->with('results_2', $results_2);
+		}
+		else {
+			//if request is not Ajax
+			$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function PostProcessBreak()
+	{
+		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_8) OR (\Auth::user()->role_9)) {
+			if (\Request::ajax()) {
+				$input = \Request::all();
+
+				if (\DB::update('UPDATE data_cuti SET status_cuti = ? WHERE id =?', [$input['status'], $input['id']])) {
+					return 'OK';
+				}
+				else {
+					return "<div class='callout callout-warning'><h5>Not processed.</h5></div>";
+				}
+			}
+			else {
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
+			}
+		}
+		else {
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function PostItemDelete()
+	{
+		if ((\Auth::user()->superadmin)) {
+			if (\Request::ajax()) {
+				$input = \Request::all();
+				//id - Id in which table
+				//tname = table name
+				//return $input['tname'].$input['id'];
+
+				if ($input['code'] == 2) {
+					\DB::delete('DELETE FROM insiden_pegawai WHERE id = ?', [$input['id']]);
+					return 'OK';
+				}
+				else if ($input['code'] == 3) {
+					\DB::delete('DELETE FROM kinerja_pegawai WHERE id = ?', [$input['id']]);
+					return 'OK';
+				}
+				else if ($input['code'] == 4) {
+					\DB::delete('DELETE FROM data_cuti WHERE id = ?', [$input['id']]);
+					return 'OK';
+				}
+				else {
+					return "<div class='callout callout-warning'><h5>Not deleted.</h5></div>";
+				}
+			}
+			else {
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
+			}
+		}
+		else {
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
 		}
 	}
 }

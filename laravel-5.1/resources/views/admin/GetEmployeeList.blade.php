@@ -67,8 +67,13 @@
               <td>{{ $result->jenis_divisi_nama }}</td>
               <td>{{ $result->branch }}</td>
               <td>--</td>
+              @if (Auth::user()->superadmin OR Auth::user()->role_4)
               <td><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailUser({{ $result->nip }})"><span class="glyphicon glyphicon-edit"></span></a></td>
               <td class="danger"><a href="#" onclick="eraseUser({{ $result->nip }})"><span class="glyphicon glyphicon-remove"></span></a></td>
+              @else
+              <td></td>
+              <td class="danger"></td>
+              @endif
             </tr>
             @endforeach
             @endif
@@ -91,6 +96,7 @@
     </div>
   </section>
 
+  @if (Auth::user()->superadmin OR Auth::user()->role_5)
   <section class="content-header">
     <h1>
       Incidents & Accidents
@@ -114,11 +120,13 @@
               <th>Report Time</th>
               <th>Reporter's Account</th>
               <th>Details</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
             @if (empty($results_2))
             <tr>
+              <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
@@ -143,6 +151,11 @@
               <td>{{ $result_2->waktu_laporan }}</td>
               <td>{{ $result_2->pelapor_akun }}</td>
               <td><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailIncident({{ $result_2->id }})"><span class="glyphicon glyphicon-edit"></span></a></td>
+              @if (Auth::user()->superadmin)
+              <td class="danger" id="delete_content_2_{{ $result_2->id }}"><a href="#itemDelete" onclick="itemDelete({{ $result_2->id }}, 'insiden_pegawai', 2)"><span class="glyphicon glyphicon-remove"></span></a></td>
+              @else
+              <td class="danger"></td>
+              @endif
             </tr>
             @endforeach
             @endif
@@ -156,13 +169,16 @@
               <th>Report Time</th>
               <th>Reporter's Account</th>
               <th>Details</th>
+              <th>Delete</th>
             </tr>
           </tfoot>
         </table>
       </div>
     </div>
   </section>
+  @endif
 
+  @if (Auth::user()->superadmin OR Auth::user()->role_6)
   <section class="content-header">
     <h1>
       Performance Record
@@ -184,11 +200,13 @@
               <th>Start Date</th>
               <th>End Date</th>
               <th>Details</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
             @if (empty($results_3))
             <tr>
+              <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
@@ -203,6 +221,11 @@
               <td>{{ $result_3->tanggal_mulai }}</td>
               <td>{{ $result_3->tanggal_selesai }}</td>
               <td><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailPerformance({{ $result_3->id }})"><span class="glyphicon glyphicon-edit"></span></a></td>
+              @if (Auth::user()->superadmin)
+              <td class="danger" id="delete_content_3_{{ $result_3->id }}"><a href="#itemDelete" onclick="itemDelete({{ $result_3->id }}, 'kinerja_pegawai', 3)"><span class="glyphicon glyphicon-remove"></span></a></td>
+              @else
+              <td class="danger"></td>
+              @endif
             </tr>
             @endforeach
             @endif
@@ -214,75 +237,86 @@
               <th>Start Date</th>
               <th>End Date</th>
               <th>Details</th>
+              <th>Delete</th>
             </tr>
           </tfoot>
         </table>
       </div>
     </div>
   </section>
+  @endif
 
+  @if (\Auth::user()->superadmin OR \Auth::user()->role_8 OR \Auth::user()->role_9)
+  <section class="content-header">
+    <h1>
+      Pending Break / Leave Requests
+      <small>Recorded Employee's Break / Leave Requests.</small>
+    </h1>
+  </section>
 
-<section class="content-header">
-  <h1>
-    Pending Break / Leave Requests
-    <small>Recorded Employee's Break / Leave Requests.</small>
-  </h1>
-</section>
-
-<section class="content">
-  <div id="page_feedback"></div>
-  <div class="box">
-    <div class="box-header">
+  <section class="content">
+    <div id="page_feedback"></div>
+    <div class="box">
+      <div class="box-header">
+      </div>
+      <div class="box-body">
+        <table id="table_4" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>NIP</th>
+              <th>Name</th>
+              <th>Substitute's Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Details</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (empty($results_4))
+            <tr>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+              <td>Empty</td>
+            </tr>
+            @else
+            @foreach($results_4 as $result_4)
+            <tr id="content_4_{{ $result_4->id }}" style="background-color: #F2E0D9">
+              <td>{{ $result_4->nip }}</td>
+              <td>{{ $result_4->nama_lengkap }}</td>
+              <td>{{ $result_4->pengganti_nama }}</td>
+              <td>{{ $result_4->tanggal_mulai }}</td>
+              <td>{{ $result_4->tanggal_selesai }}</td>
+              <td id="break_content_{{ $result_4->id }}"><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailRequestBreak({{ $result_4->id }})"><span class="glyphicon glyphicon-edit"></span></a></td>
+              @if (Auth::user()->superadmin)
+              <td class="danger" id="delete_content_4_{{ $result_4->id }}"><a href="#itemDelete" onclick="itemDelete({{ $result_4->id }}, 'data_cuti', 4)"><span class="glyphicon glyphicon-remove"></span></a></td>
+              @else
+              <td class="danger"></td>
+              @endif
+            </tr>
+            @endforeach
+            @endif
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>NIP</th>
+              <th>Name</th>
+              <th>Substitute's Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Details</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
-    <div class="box-body">
-      <table id="table_4" class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>NIP</th>
-            <th>Name</th>
-            <th>Substitute's Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (empty($results_4))
-          <tr>
-            <td>Empty</td>
-            <td>Empty</td>
-            <td>Empty</td>
-            <td>Empty</td>
-            <td>Empty</td>
-            <td>Empty</td>
-          </tr>
-          @else
-          @foreach($results_4 as $result_4)
-          <tr id="content_4_{{ $result_4->id }}" style="background-color: #F2E0D9">
-            <td>{{ $result_4->nip }}</td>
-            <td>{{ $result_4->nama_lengkap }}</td>
-            <td>{{ $result_4->pengganti_nama }}</td>
-            <td>{{ $result_4->tanggal_mulai }}</td>
-            <td>{{ $result_4->tanggal_selesai }}</td>
-            <td><a href="#" data-toggle="modal" data-target="#general_modal" onclick="detailRequestBreak({{ $result_4->id }})"><span class="glyphicon glyphicon-edit"></span></a></td>
-          </tr>
-          @endforeach
-          @endif
-        </tbody>
-        <tfoot>
-          <tr>
-            <th>NIP</th>
-            <th>Name</th>
-            <th>Substitute's Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Details</th>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-</section>
+  </section>
+  @endif
+
 
 <script src="{{ asset('/LTEAdmin/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
@@ -342,6 +376,29 @@
   function detailRequestBreak(id)
   {
     $("#modal_content").empty().load("/admin/RequestBreak/" + id);
+  }
+
+  function itemDelete(id, tname, code) {
+    console.log("delete id: " + id + ". in table " + tname);
+    $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+    $.post("/admin/ItemDelete",
+    {
+      _token: $("#general_token").val(),
+      tname: tname,
+      id: id,
+      code: code,
+    },
+    function(data,status){
+      if (data == 'OK')
+      {
+        $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
+        $("#delete_content_" + code + "_" + id).empty().text('DELETED');
+      }
+      else
+      {
+        $("#page_feedback").empty().html(data);
+      }
+    });
   }
 </script>
 </div>

@@ -28,7 +28,7 @@
 
         <div class="box-body">
           <!-- PERSONAL INFO-->
-          <input type="hidden" id="form_1_token" name="_token" value="{{ csrf_token() }}">
+          <input type="hidden" id="_token" name="_token" value="{{ csrf_token() }}">
 
           <div class="form-group">
             <label>Request Status</label>
@@ -118,7 +118,7 @@
             <thead>
               <tr>
                 <th>Status</th>
-                <th>Employee's Name</th>
+                <!--<th>Employee's Name</th>-->
                 <th>Substitute's Name</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -128,7 +128,7 @@
               @foreach($results_2 as $result_2)
               <tr>
                 <td>{{ $result_2->status_cuti }}</td>
-                <td>{{ $result_2->nama_lengkap }}</td>
+                <!--<td>{{ $result_2->nama_lengkap }}</td>-->
                 <td>{{ $result_2->pengganti_nama }}</td>
                 <td>{{ $result_2->tanggal_mulai }}</td>
                 <td>{{ $result_2->tanggal_selesai }}</td>
@@ -141,6 +141,28 @@
     </div>
   </div>
 
-  <button type="submit" id="form_1_button_edit" class="btn btn-success btn-flat">Approve</button>
-  <button type="submit" id="form_1_button_edit" class="btn btn-warning btn-flat">Deny</button>
+  <button id="form_1_button_edit" class="btn btn-success btn-flat" onclick="processBreak({{ $result->id }}, 'APPROVED')">Approve</button>
+  <button id="form_1_button_edit" class="btn btn-warning btn-flat" onclick="processBreak({{ $result->id }}, 'DENIED')">Deny</button>
 @endforeach
+<script>
+  function processBreak(id, break_status) {
+    $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+    $.post("/admin/ProcessBreak",
+    {
+      _token: $("#_token").val(),
+      id: id,
+      status: break_status,
+    },
+    function(data,status){
+      if (data == 'OK')
+      {
+        $("#form_feedback").empty().html("<div class='callout callout-success'><h5>Success.</h5></div>");
+        $("#break_content_" + id).empty().text(break_status);
+      }
+      else
+      {
+        $("#form_feedback").empty().html(data);
+      }
+    });
+  }
+</script>

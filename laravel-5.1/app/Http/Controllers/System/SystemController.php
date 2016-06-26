@@ -424,7 +424,7 @@ class SystemController extends Controller
 	{
 		// superadmin can access all, role_1 can register account
 		// read privileges document to for more info
-		if ((\Auth::user()->superadmin == false) or (\Auth::user()->role_1 == false))
+		if ((\Auth::user()->superadmin) or (\Auth::user()->role_1))
 		{
 			//if authenticated and authorized
 			return view ('system.AccountRegister');
@@ -441,7 +441,7 @@ class SystemController extends Controller
 	{
 		// superadmin can access all, role_1 can register account
 		// read privileges document to for more info
-		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_1 == true))
+		if ((\Auth::user()->superadmin) or (\Auth::user()->role_1))
 		{
 			//if authenticated and authorized
 			//echo "can access!";
@@ -576,7 +576,7 @@ class SystemController extends Controller
 	{
 		// superadmin can access all, role_1 can register account
 		// read privileges document to for more info
-		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_2 == true))
+		if ((\Auth::user()->superadmin) or (\Auth::user()->role_2))
 		{
 			//if authenticated and authorized
 
@@ -595,7 +595,7 @@ class SystemController extends Controller
 	{
 		// superadmin can access all, role_1 can register account
 		// read privileges document to for more info
-		if ((\Auth::user()->superadmin == true) or (\Auth::user()->role_2 == true))
+		if ((\Auth::user()->superadmin) or (\Auth::user()->role_2))
 		{
 			//if authenticated and authorized
 			if (\Request::ajax()) {
@@ -665,7 +665,7 @@ class SystemController extends Controller
 
 	public function GetAccountDetail($nip)
 	{
-		if ((\Auth::user()->superadmin == true) OR (\Auth::user()->role_2 == true)) {
+		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_2)) {
 			if (\Request::ajax()) {
 				$results = \DB::select('SELECT
 					id,
@@ -691,6 +691,31 @@ class SystemController extends Controller
 			 	);
 
 				return view('system.AccountDetail')->with('results', $results)->with('nip', $nip);
+			}
+			else {
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
+			}
+		}
+		else {
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function PostAccountDelete()
+	{
+		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_2)) {
+			if (\Request::ajax()) {
+				$input = \Request::all();
+				if (\DB::delete('DELETE FROM users WHERE id = ?', [$input['id']])) {
+					return 'OK';
+				}
+				else {
+					return "<div class='callout callout-warning'><h5>Not deleted.</h5></div>";
+				}
 			}
 			else {
 				//if request is not Ajax

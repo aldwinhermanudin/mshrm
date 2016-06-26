@@ -78,6 +78,10 @@ Route::post('admin/ReportPerformance', 'Admin\AdminController@PostReportPerforma
 //Request break
 Route::get('admin/RequestBreak', 'Admin\AdminController@GetRequestBreak');
 Route::post('admin/RequestBreak', 'Admin\AdminController@PostRequestBreak');
+Route::post('admin/ProcessBreak', 'Admin\AdminController@PostProcessBreak');
+
+//Item delete
+Route::post('admin/ItemDelete', 'Admin\AdminController@PostItemDelete');
 
 //Export routes
 Route::get('resources/export/xlsx/EmployeeList', 'System\ResourceController@GetEmployeeListXLSX');
