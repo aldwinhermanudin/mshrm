@@ -1,7 +1,5 @@
 @extends('core.app')
-
 @section('content')
-
 
 @if (Cookie::get('ms_lang') == null)
   <?php

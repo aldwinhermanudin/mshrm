@@ -24,6 +24,8 @@ Route::get('/resources/csv/{code}', 'System\ResourceController@GetCSV');
 Route::get('/system/EmployeeRegister', 'System\SystemController@GetEmployeeRegister');
 Route::post('/system/EmployeeRegister', 'System\SystemController@PostEmployeeRegister');
 Route::post('/system/EmployeeRegisterFile', 'System\SystemController@PostEmployeeRegisterFile');
+
+//exceptional
 Route::post('/system/EmployeeCheck', 'System\SystemController@PostEmployeeCheck');
 
 //Account operations inside the application

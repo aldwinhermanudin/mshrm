@@ -14,36 +14,24 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/skins/_all-skins.min.css') }}">
-
     <script src="{{ asset('/LTEAdmin/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
-
   </head>
-  <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
   <body class="hold-transition skin-blue layout-boxed sidebar-mini">
-    <!-- Site wrapper -->
     <div class="wrapper">
-
       <header class="main-header">
-        <!-- Logo -->
-        <a href="../../index2.html" class="logo">
-          <!-- mini logo for sidebar mini 50x50 pixels -->
+        <a href="#" class="logo">
           <span class="logo-mini"><b>M</b>S</span>
-          <!-- logo for regular state and mobile devices -->
           <span class="logo-lg"><b>Mitra</b>Siaga</span>
         </a>
-        <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
-          <!-- Sidebar toggle button-->
           <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-            <span class="sr-only">Toggle navigation</span>
+            <span class="sr-only">Navigasi</span>
           </a>
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
@@ -52,133 +40,44 @@
               <li><a id="set_language_indonesia" href="#setLaguageIndonesia"><em>Indonesia</em></a></li>
               <input type="hidden" id="app_token" name="_token" value="{{ csrf_token() }}">
 
-              <!-- Messages: style can be found in dropdown.less-->
-              <li class="dropdown messages-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-envelope-o"></i>
-                  <span class="label label-success">4</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="header">Anda memiliki 4 pesan</li>
-                  <li>
-                    <!-- inner menu: contains the actual data -->
-                    <ul class="menu">
-                      <li><!-- start message -->
-                        <a href="#">
-                          <div class="pull-left">
-                            <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
-                          </div>
-                          <h4>
-                            Support Team
-                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                          </h4>
-                          <p>Why not buy a new awesome theme?</p>
-                        </a>
-                      </li><!-- end message -->
-                    </ul>
-                  </li>
-                  <li class="footer"><a href="#">See All Messages</a></li>
-                </ul>
-              </li>
-              <!-- Notifications: style can be found in dropdown.less -->
-              <li class="dropdown notifications-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-bell-o"></i>
-                  <span class="label label-warning">10</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="header">You have 10 notifications</li>
-                  <li>
-                    <!-- inner menu: contains the actual data -->
-                    <ul class="menu">
-                      <li>
-                        <a href="#">
-                          <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="footer"><a href="#">View all</a></li>
-                </ul>
-              </li>
-              <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
                   <span class="hidden-xs">{{ Auth::user()->name }}</span>
                 </a>
                 <ul class="dropdown-menu">
-                  <!-- User image -->
                   <li class="user-header">
                     <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
                     <p>
-                      {{ Auth::user()->name }} - Squad
-                      <small>Member since Jan. 2016</small>
+                      {{ Auth::user()->name }}
+                      <small>Since {{ Auth::user()->created_at }}</small>
                     </p>
                   </li>
-                  <!-- Menu Body -->
-                  <li class="user-body">
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Pengikut</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Penjual</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Teman</a>
-                    </div>
-                  </li>
-                  <!-- Menu Footer-->
                   <li class="user-footer">
-                    <div class="pull-left">
-                      <a href="#" class="btn btn-default btn-flat">Profil</a>
-                    </div>
-                    <div class="pull-right">
-                      <a href="{{ url('/auth/logout') }}" class="btn btn-default btn-flat">Keluar</a>
-                    </div>
+                    <a href="{{ url('/auth/logout') }}" class="btn btn-default btn-flat">Log Out</a>
                   </li>
                 </ul>
-              </li>
-
-              <!-- Control Sidebar Toggle Button -->
-              <li>
-                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
               </li>
             </ul>
           </div>
         </nav>
       </header>
 
-      <!-- =============================================== -->
-
-      <!-- Left side column. contains the sidebar -->
       <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-          <!-- Sidebar user panel -->
-          <div class="user-panel">
-            <div class="pull-left image">
-              <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
-            </div>
-            <div class="pull-left info">
-              <p>{{ Auth::user()->name }}</p>
-              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-            </div>
-          </div>
-          <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
             <li class="header">NAVIGASI</li>
 
-            @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true) or (Auth::user()->role_2 == true))
+            @if ((Auth::user()->superadmin) or (Auth::user()->role_1) or (Auth::user()->role_2))
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-users"></i> <span>Akun</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true))
+                @if ((Auth::user()->superadmin) or (Auth::user()->role_1))
                 <li><a href="{{ url('/system/AccountRegister') }}"><i class="fa fa-user-plus"></i> Daftarkan Akun</a></li>
                 @endif
-                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_2 == true))
+                @if ((Auth::user()->superadmin) or (Auth::user()->role_2))
                 <li><a href="{{ url('/system/AccountEdit') }}"><i class="fa fa-user-plus"></i> Ubah / Atur Akun</a></li>
                 @endif
               </ul>
@@ -191,33 +90,43 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href="{{ url('/admin/EmployeeList') }}"><i class="fa fa-user-plus"></i> Daftar Pegawai</a></li>
+                @if (Auth::user()->superadmin OR Auth::user()->role_5)
                 <li><a href="{{ url('/admin/ReportIncident') }}"><i class="fa fa-user-plus"></i> Laporkan Insiden / Kecelakaan</a></li>
-                <li><a href="{{ url('/admin/ReportPerformance') }}"><i class="fa fa-user-plus"></i> Catat Performa Kerja</a></li>
-                <li><a href="{{ url('/admin/RequestBreak') }}"><i class="fa fa-user-plus"></i> Permintaan Cuti</a></li>
+                @endif
+                @if (Auth::user()->superadmin OR Auth::user()->role_6)
+                <li><a href="{{ url('/admin/ReportPerformance') }}"><i class="fa fa-user-plus"></i> Catat Kinerja Pegawai</a></li>
+                @endif
+                @if (Auth::user()->superadmin OR Auth::user()->role_7)
+                <li><a href="{{ url('/admin/RequestBreak') }}"><i class="fa fa-user-plus"></i> Mengajukan Cuti</a></li>
+                @endif
               </ul>
             </li>
+
+            @if (Auth::user()->superadmin OR Auth::user()->role_3)
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-users"></i> <span>Pegawai</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{ url('/system/EmployeeRegister') }}"><i class="fa fa-user-plus"></i> Tambahkan Pegawai Baru</a></li>
+                <li><a href="{{ url('/system/EmployeeRegister') }}"><i class="fa fa-user-plus"></i> Tambahkan Pegawai</a></li>
               </ul>
             </li>
+            @endif
+
+            @if (Auth::user()->superadmin OR Auth::user()->role_10)
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-users"></i> <span>Ekspor</span> <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-users"></i> <span>Ekspor Data</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a id="button_export" href="#Exports" data-toggle="modal" data-target="#general_modal"><i class="fa fa-user-plus"></i> Ekspor Data</a></li>
+                <li><a id="button_export" href="#Exports" data-toggle="modal" data-target="#general_modal"><i class="fa fa-user-plus"></i> Lakukan Ekspor Data</a></li>
               </ul>
             </li>
+            @endif
+
           </ul>
         </section>
-        <!-- /.sidebar -->
       </aside>
-
-      <!-- =============================================== -->
 
 @yield('content')
 
@@ -227,195 +136,22 @@
         </div>
         Aplikasi Mitra Siaga Human Resource Management (MSHRM)<strong> ⋅ 2016 ⋅ PT. Mitra Siaga ⋅ </strong>Powered by PT. Pajon Teknologi
       </footer>
-
-      <!-- Control Sidebar -->
-      <aside class="control-sidebar control-sidebar-dark">
-        <!-- Create the tabs -->
-        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-          <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-          <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <!-- Home tab content -->
-          <div class="tab-pane" id="control-sidebar-home-tab">
-            <h3 class="control-sidebar-heading">Recent Activity</h3>
-            <ul class="control-sidebar-menu">
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-                    <p>Will be 23 on April 24th</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-user bg-yellow"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-                    <p>New phone +1(800)555-1234</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-                    <p>nora@example.com</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-file-code-o bg-green"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-                    <p>Execution time 5 seconds</p>
-                  </div>
-                </a>
-              </li>
-            </ul><!-- /.control-sidebar-menu -->
-
-            <h3 class="control-sidebar-heading">Tasks Progress</h3>
-            <ul class="control-sidebar-menu">
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Custom Template Design
-                    <span class="label label-danger pull-right">70%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Update Resume
-                    <span class="label label-success pull-right">95%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Laravel Integration
-                    <span class="label label-warning pull-right">50%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Back End Framework
-                    <span class="label label-primary pull-right">68%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-                  </div>
-                </a>
-              </li>
-            </ul><!-- /.control-sidebar-menu -->
-
-          </div><!-- /.tab-pane -->
-          <!-- Stats tab content -->
-          <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
-          <!-- Settings tab content -->
-          <div class="tab-pane" id="control-sidebar-settings-tab">
-            <form method="post">
-              <h3 class="control-sidebar-heading">General Settings</h3>
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Report panel usage
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-                <p>
-                  Some information about this general settings option
-                </p>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Allow mail redirect
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-                <p>
-                  Other sets of options are available
-                </p>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Expose author name in posts
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-                <p>
-                  Allow the user to show his name in blog posts
-                </p>
-              </div><!-- /.form-group -->
-
-              <h3 class="control-sidebar-heading">Chat Settings</h3>
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Show me as online
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Turn off notifications
-                  <input type="checkbox" class="pull-right">
-                </label>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Delete chat history
-                  <a href="javascript::;" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-                </label>
-              </div><!-- /.form-group -->
-            </form>
-          </div><!-- /.tab-pane -->
-        </div>
-      </aside><!-- /.control-sidebar -->
-      <!-- Add the sidebar's background. This div must be placed
-           immediately after the control sidebar -->
-      <div class="control-sidebar-bg"></div>
-    </div><!-- ./wrapper -->
+    </div>
 
     <script src="{{ asset('/LTEAdmin/bootstrap/js/bootstrap.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/plugins/fastclick/fastclick.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/dist/js/app.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/dist/js/demo.js') }}"></script>
-
     <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
     <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 
-
-    <!-- Modal -->
     <div class="modal fade bs-example-modal-lg" id="general_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-body" id="modal_content">
-            Detail
+            Detil
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -449,7 +185,7 @@
   				window.location.replace("/");
   			}).fail(function(data,status){
   				//failcodes
-  			});
+        });
     	});
 
       $("#set_language_indonesia").click(function(){
@@ -461,13 +197,11 @@
   			function(data,status){
   				window.location.replace("/");
   			}).fail(function(data,status){
-  				//failcodes
   			});
     	});
 
     });
     </script>
-
   </body>
 </html>
 @else
@@ -476,34 +210,22 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/skins/_all-skins.min.css') }}">
-
     <script src="{{ asset('/LTEAdmin/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
-
   </head>
-  <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
   <body class="hold-transition skin-blue layout-boxed sidebar-mini">
-    <!-- Site wrapper -->
     <div class="wrapper">
-
       <header class="main-header">
-        <!-- Logo -->
-        <a href="../../index2.html" class="logo">
-          <!-- mini logo for sidebar mini 50x50 pixels -->
+        <a href="#" class="logo">
           <span class="logo-mini"><b>M</b>S</span>
-          <!-- logo for regular state and mobile devices -->
           <span class="logo-lg"><b>Mitra</b>Siaga</span>
         </a>
-        <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
-          <!-- Sidebar toggle button-->
           <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
           </a>
@@ -514,133 +236,44 @@
               <li><a id="set_language_indonesia" href="#setLaguageIndonesia">Indonesia</a></li>
               <input type="hidden" id="app_token" name="_token" value="{{ csrf_token() }}">
 
-              <!-- Messages: style can be found in dropdown.less-->
-              <li class="dropdown messages-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-envelope-o"></i>
-                  <span class="label label-success">4</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="header">You have 4 messages</li>
-                  <li>
-                    <!-- inner menu: contains the actual data -->
-                    <ul class="menu">
-                      <li><!-- start message -->
-                        <a href="#">
-                          <div class="pull-left">
-                            <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
-                          </div>
-                          <h4>
-                            Support Team
-                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                          </h4>
-                          <p>Why not buy a new awesome theme?</p>
-                        </a>
-                      </li><!-- end message -->
-                    </ul>
-                  </li>
-                  <li class="footer"><a href="#">See All Messages</a></li>
-                </ul>
-              </li>
-              <!-- Notifications: style can be found in dropdown.less -->
-              <li class="dropdown notifications-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-bell-o"></i>
-                  <span class="label label-warning">10</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="header">You have 10 notifications</li>
-                  <li>
-                    <!-- inner menu: contains the actual data -->
-                    <ul class="menu">
-                      <li>
-                        <a href="#">
-                          <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="footer"><a href="#">View all</a></li>
-                </ul>
-              </li>
-              <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
                   <span class="hidden-xs">{{ Auth::user()->name }}</span>
                 </a>
                 <ul class="dropdown-menu">
-                  <!-- User image -->
                   <li class="user-header">
                     <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
                     <p>
-                      {{ Auth::user()->name }} - Squad
-                      <small>Member since Jan. 2016</small>
+                      {{ Auth::user()->name }}
+                      <small>Since {{ Auth::user()->created_at }}</small>
                     </p>
                   </li>
-                  <!-- Menu Body -->
-                  <li class="user-body">
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Followers</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Sales</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Friends</a>
-                    </div>
-                  </li>
-                  <!-- Menu Footer-->
                   <li class="user-footer">
-                    <div class="pull-left">
-                      <a href="#" class="btn btn-default btn-flat">Profile</a>
-                    </div>
-                    <div class="pull-right">
-                      <a href="{{ url('/auth/logout') }}" class="btn btn-default btn-flat">Log Out</a>
-                    </div>
+                    <a href="{{ url('/auth/logout') }}" class="btn btn-default btn-flat">Log Out</a>
                   </li>
                 </ul>
-              </li>
-
-              <!-- Control Sidebar Toggle Button -->
-              <li>
-                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
               </li>
             </ul>
           </div>
         </nav>
       </header>
 
-      <!-- =============================================== -->
-
-      <!-- Left side column. contains the sidebar -->
       <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-          <!-- Sidebar user panel -->
-          <div class="user-panel">
-            <div class="pull-left image">
-              <img src="{{ asset('/LTEAdmin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
-            </div>
-            <div class="pull-left info">
-              <p>{{ Auth::user()->name }}</p>
-              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-            </div>
-          </div>
-          <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
             <li class="header">NAVIGATION</li>
 
-            @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true) or (Auth::user()->role_2 == true))
+            @if ((Auth::user()->superadmin) or (Auth::user()->role_1) or (Auth::user()->role_2))
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-users"></i> <span>Accounts</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_1 == true))
+                @if ((Auth::user()->superadmin) or (Auth::user()->role_1))
                 <li><a href="{{ url('/system/AccountRegister') }}"><i class="fa fa-user-plus"></i> Register Account</a></li>
                 @endif
-                @if ((Auth::user()->superadmin == true) or (Auth::user()->role_2 == true))
+                @if ((Auth::user()->superadmin) or (Auth::user()->role_2))
                 <li><a href="{{ url('/system/AccountEdit') }}"><i class="fa fa-user-plus"></i> Edit / Set Account</a></li>
                 @endif
               </ul>
@@ -653,11 +286,19 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href="{{ url('/admin/EmployeeList') }}"><i class="fa fa-user-plus"></i> Employee List</a></li>
+                @if (Auth::user()->superadmin OR Auth::user()->role_5)
                 <li><a href="{{ url('/admin/ReportIncident') }}"><i class="fa fa-user-plus"></i> Report Incident</a></li>
+                @endif
+                @if (Auth::user()->superadmin OR Auth::user()->role_6)
                 <li><a href="{{ url('/admin/ReportPerformance') }}"><i class="fa fa-user-plus"></i> Record Performance</a></li>
+                @endif
+                @if (Auth::user()->superadmin OR Auth::user()->role_7)
                 <li><a href="{{ url('/admin/RequestBreak') }}"><i class="fa fa-user-plus"></i> Request Break / Leave</a></li>
+                @endif
               </ul>
             </li>
+
+            @if (Auth::user()->superadmin OR Auth::user()->role_3)
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-users"></i> <span>Employee</span> <i class="fa fa-angle-left pull-right"></i>
@@ -666,6 +307,9 @@
                 <li><a href="{{ url('/system/EmployeeRegister') }}"><i class="fa fa-user-plus"></i> Add Employee</a></li>
               </ul>
             </li>
+            @endif
+
+            @if (Auth::user()->superadmin OR Auth::user()->role_10)
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-users"></i> <span>Exports</span> <i class="fa fa-angle-left pull-right"></i>
@@ -674,12 +318,11 @@
                 <li><a id="button_export" href="#Exports" data-toggle="modal" data-target="#general_modal"><i class="fa fa-user-plus"></i> Exports</a></li>
               </ul>
             </li>
+            @endif
+
           </ul>
         </section>
-        <!-- /.sidebar -->
       </aside>
-
-      <!-- =============================================== -->
 
 @yield('content')
 
@@ -689,190 +332,17 @@
         </div>
         Aplikasi Mitra Siaga Human Resource Management (MSHRM)<strong> ⋅ 2016 ⋅ PT. Mitra Siaga ⋅ </strong>Powered by PT. Pajon Teknologi
       </footer>
-
-      <!-- Control Sidebar -->
-      <aside class="control-sidebar control-sidebar-dark">
-        <!-- Create the tabs -->
-        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-          <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-          <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <!-- Home tab content -->
-          <div class="tab-pane" id="control-sidebar-home-tab">
-            <h3 class="control-sidebar-heading">Recent Activity</h3>
-            <ul class="control-sidebar-menu">
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-                    <p>Will be 23 on April 24th</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-user bg-yellow"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-                    <p>New phone +1(800)555-1234</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-                    <p>nora@example.com</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <i class="menu-icon fa fa-file-code-o bg-green"></i>
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-                    <p>Execution time 5 seconds</p>
-                  </div>
-                </a>
-              </li>
-            </ul><!-- /.control-sidebar-menu -->
-
-            <h3 class="control-sidebar-heading">Tasks Progress</h3>
-            <ul class="control-sidebar-menu">
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Custom Template Design
-                    <span class="label label-danger pull-right">70%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Update Resume
-                    <span class="label label-success pull-right">95%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Laravel Integration
-                    <span class="label label-warning pull-right">50%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Back End Framework
-                    <span class="label label-primary pull-right">68%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-                  </div>
-                </a>
-              </li>
-            </ul><!-- /.control-sidebar-menu -->
-
-          </div><!-- /.tab-pane -->
-          <!-- Stats tab content -->
-          <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
-          <!-- Settings tab content -->
-          <div class="tab-pane" id="control-sidebar-settings-tab">
-            <form method="post">
-              <h3 class="control-sidebar-heading">General Settings</h3>
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Report panel usage
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-                <p>
-                  Some information about this general settings option
-                </p>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Allow mail redirect
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-                <p>
-                  Other sets of options are available
-                </p>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Expose author name in posts
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-                <p>
-                  Allow the user to show his name in blog posts
-                </p>
-              </div><!-- /.form-group -->
-
-              <h3 class="control-sidebar-heading">Chat Settings</h3>
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Show me as online
-                  <input type="checkbox" class="pull-right" checked>
-                </label>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Turn off notifications
-                  <input type="checkbox" class="pull-right">
-                </label>
-              </div><!-- /.form-group -->
-
-              <div class="form-group">
-                <label class="control-sidebar-subheading">
-                  Delete chat history
-                  <a href="javascript::;" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-                </label>
-              </div><!-- /.form-group -->
-            </form>
-          </div><!-- /.tab-pane -->
-        </div>
-      </aside><!-- /.control-sidebar -->
-      <!-- Add the sidebar's background. This div must be placed
-           immediately after the control sidebar -->
-      <div class="control-sidebar-bg"></div>
-    </div><!-- ./wrapper -->
+    </div>
 
     <script src="{{ asset('/LTEAdmin/bootstrap/js/bootstrap.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/plugins/fastclick/fastclick.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/dist/js/app.min.js') }}"></script>
-
     <script src="{{ asset('/LTEAdmin/dist/js/demo.js') }}"></script>
-
     <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
     <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 
-
-    <!-- Modal -->
     <div class="modal fade bs-example-modal-lg" id="general_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -911,7 +381,7 @@
   				window.location.replace("/");
   			}).fail(function(data,status){
   				//failcodes
-  			});
+        });
     	});
 
       $("#set_language_indonesia").click(function(){
@@ -923,13 +393,11 @@
   			function(data,status){
   				window.location.replace("/");
   			}).fail(function(data,status){
-  				//failcodes
   			});
     	});
 
     });
     </script>
-
   </body>
 </html>
 @endif
