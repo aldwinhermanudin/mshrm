@@ -28,9 +28,27 @@
             </thead>
             <tbody>
               <tr>
-                <td>Daftar Pegawait</td>
+                <td>Daftar Akun</td>
+                <td><a href="/resources/export/pdf/AccountList" target="_blank">Lakukan Ekspor</a></td>
+                <td><a href="/resources/export/xlsx/AccountList" target="_blank">Lakukan Ekspor</a></td>
+              </tr>
+              <tr>
+                <td>Daftar Pegawai</td>
+                <!--
                 <td><a href="/resources/export/pdf/EmployeeList" target="_blank">Lakukan Ekspor</a></td>
+                -->
+                <td>Lakukan Ekspor</td>
                 <td><a href="/resources/export/xlsx/EmployeeList" target="_blank">Lakukan Ekspor</a></td>
+              </tr>
+              <tr>
+                <td>Daftar Insiden / Kecelakaan</td>
+                <td><a href="/resources/export/pdf/IncidentList" target="_blank">Lakukan Ekspor</a></td>
+                <td><a href="/resources/export/xlsx/IncidentList" target="_blank">Lakukan Ekspor</a></td>
+              </tr>
+              <tr>
+                <td>Daftar Cuti</td>
+                <td><a href="/resources/export/pdf/BreakList" target="_blank">Lakukan Ekspor</a></td>
+                <td><a href="/resources/export/xlsx/BreakList" target="_blank">Lakukan Ekspor</a></td>
               </tr>
             </tbody>
             <tfoot>
@@ -66,9 +84,27 @@
             </thead>
             <tbody>
               <tr>
-                <td>Employee List</td>
-                <td><a href="/resources/export/pdf/EmployeeList" target="_blank">Export</a></td>
+                <td>List of Account</td>
+                <td><a href="/resources/export/pdf/AccountList" target="_blank">Export</a></td>
+                <td><a href="/resources/export/xlsx/AccountList" target="_blank">Export</a></td>
+              </tr>
+              <tr>
+                <td>List of Employee</td>
+                <!--
+                <td><a href="/resources/export/pdf/EmployeeList" target="_blank">Lakukan Ekspor</a></td>
+                -->
+                <td>Export</td>
                 <td><a href="/resources/export/xlsx/EmployeeList" target="_blank">Export</a></td>
+              </tr>
+              <tr>
+                <td>List of Incident / Accident</td>
+                <td><a href="/resources/export/pdf/IncidentList" target="_blank">Export</a></td>
+                <td><a href="/resources/export/xlsx/IncidentList" target="_blank">Export</a></td>
+              </tr>
+              <tr>
+                <td>List of Break Request</td>
+                <td><a href="/resources/export/pdf/BreakList" target="_blank">Export</a></td>
+                <td><a href="/resources/export/xlsx/BreakList" target="_blank">Export</a></td>
               </tr>
             </tbody>
             <tfoot>

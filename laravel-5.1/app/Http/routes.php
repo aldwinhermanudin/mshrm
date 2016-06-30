@@ -89,5 +89,14 @@ Route::post('admin/ItemDelete', 'Admin\AdminController@PostItemDelete');
 Route::get('resources/export/xlsx/EmployeeList', 'System\ResourceController@GetEmployeeListXLSX');
 Route::get('resources/export/pdf/EmployeeList', 'System\ResourceController@GetEmployeeListPDF');
 
+Route::get('resources/export/xlsx/AccountList', 'System\ResourceController@GetAccountListXLSX');
+Route::get('resources/export/pdf/AccountList', 'System\ResourceController@GetAccountListPDF');
+
+Route::get('resources/export/xlsx/IncidentList', 'System\ResourceController@GetIncidentListXLSX');
+Route::get('resources/export/pdf/IncidentList', 'System\ResourceController@GetIncidentListPDF');
+
+Route::get('resources/export/xlsx/BreakList', 'System\ResourceController@GetBreakListXLSX');
+Route::get('resources/export/pdf/BreakList', 'System\ResourceController@GetBreakListPDF');
+
 //APP ROUTES
 Route::post('app/setting/lang', 'General\AppController@PostSettingLang');
