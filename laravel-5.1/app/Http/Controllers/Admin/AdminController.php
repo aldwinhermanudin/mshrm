@@ -597,4 +597,52 @@ class AdminController extends Controller
 			return redirect ('/system/SystemNotification')->with('message', $message);
 		}
 	}
+
+	public function GetEmployeeAttendance() {
+		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_11)) {
+			//code
+			$results_2 = \DB::select('SELECT * FROM remote_database_1.work_log WHERE isprocessed = 1 AND isread = 1 ORDER BY timestamp DESC LIMIT 0,500');
+			\DB::update('UPDATE remote_database_1.work_log SET isprocessed = 1');
+			$results = \DB::select('SELECT * FROM remote_database_1.work_log WHERE isprocessed = 1 AND isread = 0 ORDER BY timestamp DESC');
+			\DB::update('UPDATE remote_database_1.work_log SET isread = 1 WHERE isprocessed = 1');
+
+			return view ('admin.GetAttendance')->with("results", $results)->with("results_2", $results_2);
+		}
+		else {
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
+
+	public function PostEmployeeAttendance() {
+		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_11)) {
+			if (\Request::ajax()) {
+
+				$input = \Request::all();
+
+				$validator = \Validator::make($input, [
+					'nip' => 'required|exists:data_pegawai,nip',
+				]);
+
+				if ($validator->fails()) {
+					return view('ajax.Feedback')->withErrors($validator);
+				}
+				else {
+					$result = \DB::insert('INSERT INTO remote_database_1.work_log (uid) VALUES (?)', [$input['nip']]);
+					return 'OK';
+				}
+			}
+			else {
+				//if request is not Ajax
+				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
+				return redirect ('/system/SystemNotification')->with('message', $message);
+			}
+		}
+		else {
+			//if not authenticated and not authorized
+			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+			return redirect ('/system/SystemNotification')->with('message', $message);
+		}
+	}
 }

@@ -99,6 +99,9 @@
                 @if (Auth::user()->superadmin OR Auth::user()->role_7)
                 <li><a href="{{ url('/admin/RequestBreak') }}"><i class="fa fa-user-plus"></i> Mengajukan Cuti</a></li>
                 @endif
+                @if (Auth::user()->superadmin OR Auth::user()->role_11)
+                <li><a href="{{ url('/admin/EmployeeAttendance') }}"><i class="fa fa-user-plus"></i> Daftar Hadir Pegawai</a></li>
+                @endif
               </ul>
             </li>
 
@@ -294,6 +297,9 @@
                 @endif
                 @if (Auth::user()->superadmin OR Auth::user()->role_7)
                 <li><a href="{{ url('/admin/RequestBreak') }}"><i class="fa fa-user-plus"></i> Request Break / Leave</a></li>
+                @endif
+                @if (Auth::user()->superadmin OR Auth::user()->role_11)
+                <li><a href="{{ url('/admin/EmployeeAttendance') }}"><i class="fa fa-user-plus"></i> Employee's Attendance</a></li>
                 @endif
               </ul>
             </li>
