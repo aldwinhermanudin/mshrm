@@ -14,6 +14,7 @@
 @if ($language == 'id')
 <link href="{{ asset('/A/css/style.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.css') }}">
+<script src="{{ asset('/assets/bootbox/bootbox.min.js') }}"></script>
 
 <title>2016 mshrm ⋅ Ubah / Atur Akun</title>
 
@@ -120,35 +121,51 @@
       $("#modal_content").empty().load("/system/AccountDetail/" + nip);
     }
 
-    function eraseAccount(nip, id)
-    {
-      $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
-      $.post("/system/AccountDelete",
-      {
-        _token: $("#_token").val(),
-        nip: nip,
-        id: id,
-      },
-      function(data,status){
-        if (data == 'OK')
-        {
-          $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td>");
-          $("#form_feedback").empty().html("<div class='callout callout-success'><h5>Dihapus.</h5></div>");
-        }
-        else
-        {
-          $("#form_feedback").empty().html(data);
+    function eraseAccount(nip, id) {
+      bootbox.dialog({
+        message: "Anda yakin ingin menghapus akun ini?",
+        buttons: {
+          cancel: {
+            label: "Batal",
+            className: "btn-primary",
+            callback: function() {
+              //blank
+            }
+          },
+          process: {
+            label: "Hapus",
+            className: "btn-danger",
+            callback: function() {
+              //callback
+              $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+              $.post("/system/AccountDelete",
+              {
+                _token: $("#_token").val(),
+                nip: nip,
+                id: id,
+              },
+              function(data,status){
+                if (data == 'OK')
+                {
+                  $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td><td class='danger'>Dihapus</td>");
+                  $("#form_feedback").empty().html("<div class='callout callout-success'><h5>Dihapus.</h5></div>");
+                }
+                else
+                {
+                  $("#form_feedback").empty().html(data);
+                }
+              });
+            }
+          }
         }
       });
     }
-
-    $(document).ready(function(){
-    });
   </script>
 </div>
 @else
 <link href="{{ asset('/A/css/style.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.css') }}">
+<script src="{{ asset('/assets/bootbox/bootbox.min.js') }}"></script>
 
 <title>2016 mshrm ⋅ Edit Account</title>
 
@@ -257,30 +274,44 @@
 
     function eraseAccount(nip, id)
     {
-      $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
-      $.post("/system/AccountDelete",
-      {
-        _token: $("#_token").val(),
-        nip: nip,
-        id: id,
-      },
-      function(data,status){
-        if (data == 'OK')
-        {
-          $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td>");
-          $("#form_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
-        }
-        else
-        {
-          $("#form_feedback").empty().html(data);
+      bootbox.dialog({
+        message: "Are you sure want to delete this account?",
+        buttons: {
+          cancel: {
+            label: "Cancel",
+            className: "btn-primary",
+            callback: function() {
+              //blank
+            }
+          },
+          process: {
+            label: "Delete",
+            className: "btn-danger",
+            callback: function() {
+              //callback
+              $("#form_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+              $.post("/system/AccountDelete",
+              {
+                _token: $("#_token").val(),
+                nip: nip,
+                id: id,
+              },
+              function(data,status){
+                if (data == 'OK')
+                {
+                  $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td>");
+                  $("#form_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
+                }
+                else
+                {
+                  $("#form_feedback").empty().html(data);
+                }
+              });
+            }
+          }
         }
       });
     }
-
-
-
-    $(document).ready(function(){
-    });
   </script>
 </div>
 @endif

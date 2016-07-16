@@ -15,6 +15,12 @@
 <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
 <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/i18n/defaults-*.min.js"></script>
 
 <title>2016 mshrm ⋅ Laporkan Insiden / Kecelakaan</title>
   <div class="content-wrapper">
@@ -50,8 +56,13 @@
                   <div id="form_1_user_feedback"></div>
 
                   <div class="form-group">
-                    <label>NIP</label>
-                    <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip" autocomplete="off">
+                    <label>NIP / UID</label>
+                    <select class="form-control selectpicker" id="form_1_nip" name="nip" data-live-search="true">
+                      <option data-tokens="" value=""></option>
+                      @foreach ($results as $result)
+                      <option data-tokens="{{ $result->nama_lengkap }} {{ $result->nip }} {{ $result->uid }}" value="{{ $result->nip }}">{{ $result->nama_lengkap }} &bull; {{ $result->nip }} &bull; {{ $result->uid }}</option>
+                      @endforeach
+                    </select>
                   </div>
 
                   <div class="form-group">
@@ -70,6 +81,17 @@
                   <div class="form-group">
                     <label>Lokasi Kejadian</label>
                     <input type="text" class="form-control" id="form_1_tempat_terjadi" name="tempat_terjadi" placeholder="incident location">
+                  </div>
+
+                  <div class="form-group">
+                    <label>Jenis Kejadian</label>
+                    <select class="form-control" id="form_1_tipe" name="tipe" placeholder="type">
+                      <option value="TERMINAL">TERMINAL</option>
+                      <option value="GORONG-GORONG">GORONG-GORONG</option>
+                      <option value="MULKI">TMULKI</option>
+                      <option value="RIDGE CAMPL">RIDGE CAMP</option>
+                      <option value="FAMILY SHOPPING">FAMILY SHOPPING</option>
+                    </select>
                   </div>
 
                   <div class="form-group">
@@ -190,6 +212,12 @@
 <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
 <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/i18n/defaults-*.min.js"></script>
 
 <title>2016 mshrm ⋅ Report Incident</title>
   <div class="content-wrapper">
@@ -225,8 +253,13 @@
                   <div id="form_1_user_feedback"></div>
 
                   <div class="form-group">
-                    <label>NIP</label>
-                    <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip" autocomplete="off">
+                    <label>NIP / UID</label>
+                    <select class="form-control selectpicker" id="form_1_nip" name="nip" data-live-search="true">
+                      <option data-tokens="" value=""></option>
+                      @foreach ($results as $result)
+                      <option data-tokens="{{ $result->nama_lengkap }} {{ $result->nip }} {{ $result->uid }}" value="{{ $result->nip }}">{{ $result->nama_lengkap }} &bull; {{ $result->nip }} &bull; {{ $result->uid }}</option>
+                      @endforeach
+                    </select>
                   </div>
 
                   <div class="form-group">

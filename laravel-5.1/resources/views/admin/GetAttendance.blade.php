@@ -15,6 +15,12 @@
 <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
 <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/i18n/defaults-*.min.js"></script>
 
 <title>2016 mshrm ⋅ Daftar Hadir Pegawai</title>
   <div class="content-wrapper">
@@ -49,10 +55,15 @@
                   <input type="hidden" id="form_1_token" name="_token" value="{{ csrf_token() }}">
 
                   <div id="form_1_user_feedback"></div>
-
+                  
                   <div class="form-group">
-                    <label>NIP</label>
-                    <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip" autocomplete="off">
+                    <label>NIP / UID</label>
+                    <select class="form-control selectpicker" id="form_1_nip" name="nip" data-live-search="true">
+                      <option data-tokens="" value=""></option>
+                      @foreach ($results_3 as $result_3)
+                      <option data-tokens="{{ $result_3->nama_lengkap }} {{ $result_3->nip }} {{ $result_3->uid }}" value="{{ $result_3->nip }}">{{ $result_3->nama_lengkap }} &bull; {{ $result_3->nip }} &bull; {{ $result_3->uid }}</option>
+                      @endforeach
+                    </select>
                   </div>
 
                 </div>
@@ -260,6 +271,12 @@
 <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
 <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/i18n/defaults-*.min.js"></script>
 
 <title>2016 mshrm ⋅ Employee's Attendance</title>
   <div class="content-wrapper">
@@ -296,8 +313,13 @@
                   <div id="form_1_user_feedback"></div>
 
                   <div class="form-group">
-                    <label>NIP</label>
-                    <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip" autocomplete="off">
+                    <label>NIP / UID</label>
+                    <select class="form-control selectpicker" id="form_1_nip" name="nip" data-live-search="true">
+                      <option data-tokens="" value=""></option>
+                      @foreach ($results_3 as $result_3)
+                      <option data-tokens="{{ $result_3->nama_lengkap }} {{ $result_3->nip }} {{ $result_3->uid }}" value="{{ $result_3->nip }}">{{ $result_3->nama_lengkap }} &bull; {{ $result_3->nip }} &bull; {{ $result_3->uid }}</option>
+                      @endforeach
+                    </select>
                   </div>
 
                 </div>

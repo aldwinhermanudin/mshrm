@@ -181,7 +181,15 @@ class AdminController extends Controller
 			if (\Request::ajax())
 			{
 				$input = \Request::all();
+
 				\DB::delete('DELETE FROM data_pegawai where nip = ?', [$input['nip']]);
+
+				//file is deleted
+				$file_temp = 'assets/uploads/images/'.$input['nip'];
+				if (file_exists($file_temp)) {
+					unlink($file_temp);
+				}
+
 				return 'OK';
 			}
 			else {
@@ -201,7 +209,9 @@ class AdminController extends Controller
 	public function GetReportIncident()
 	{
 		if ((\Auth::user()->superadmin) or (\Auth::user()->role_5)) {
-			return view('admin.GetReportIncident');
+
+			$results = \DB::select('SELECT nip, uid, nama_lengkap FROM data_pegawai');
+			return view('admin.GetReportIncident')->with('results', $results);
 		}
 		else {
 		  //if not authenticated and not authorized
@@ -295,6 +305,7 @@ class AdminController extends Controller
 	{
 		$results = \DB::select('SELECT
 			nip,
+			uid,
 			nama_lengkap,
 			no_hp,
 			jenis_jabatan_nama,
@@ -304,13 +315,19 @@ class AdminController extends Controller
 		return view('ajax.ReportIncidentUser')->with('results', $results)->with('nip', $nip);
 	}
 
-	public function GetReportPerformance()
-	{
-		return view('admin.GetReportPerformance');
+	public function GetReportPerformance() {
+		if ((\Auth::user()->superadmin) or (\Auth::user()->role_6)) {
+			$results = \DB::select('SELECT nip, uid, nama_lengkap FROM data_pegawai');
+			return view('admin.GetReportPerformance')->with('results', $results);
+		}
+		else {
+			//if not authenticated and not authorized
+		  $message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+		  return redirect ('/system/SystemNotification')->with('message', $message);
+		}
 	}
 
-	public function PostReportPerformance()
-	{
+	public function PostReportPerformance() {
 		if ((\Auth::user()->superadmin) or (\Auth::user()->role_6)) {
 			if (\Request::ajax())
 			{
@@ -414,7 +431,8 @@ class AdminController extends Controller
 	public function GetRequestBreak()
 	{
 		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_7)) {
-			return view('admin.GetRequestBreak');
+			$results = \DB::select('SELECT nip, uid, nama_lengkap FROM data_pegawai');
+			return view('admin.GetRequestBreak')->with('results', $results);
 		}
 		else {
 			//if not authenticated and not authorized
@@ -570,7 +588,16 @@ class AdminController extends Controller
 				//return $input['tname'].$input['id'];
 
 				if ($input['code'] == 2) {
+					$results = \DB::select('SELECT url FROM insiden_pegawai WHERE id = ?', [$input['id']]);
+
 					\DB::delete('DELETE FROM insiden_pegawai WHERE id = ?', [$input['id']]);
+
+					//file is deleted
+					$file_temp = 'assets/uploads/incidents/'.$results[0]->url;
+					if (file_exists($file_temp)) {
+						unlink($file_temp);
+					}
+
 					return 'OK';
 				}
 				else if ($input['code'] == 3) {
@@ -601,12 +628,12 @@ class AdminController extends Controller
 	public function GetEmployeeAttendance() {
 		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_11)) {
 			//code
+			\DB::update('UPDATE remote_database_1.work_log SET isread = 1 WHERE isprocessed = 1');
+			$results_3 = \DB::select('SELECT nip, uid, nama_lengkap FROM data_pegawai');
 			$results_2 = \DB::select('SELECT * FROM remote_database_1.work_log WHERE isprocessed = 1 AND isread = 1 ORDER BY timestamp DESC LIMIT 0,500');
 			\DB::update('UPDATE remote_database_1.work_log SET isprocessed = 1');
 			$results = \DB::select('SELECT * FROM remote_database_1.work_log WHERE isprocessed = 1 AND isread = 0 ORDER BY timestamp DESC');
-			\DB::update('UPDATE remote_database_1.work_log SET isread = 1 WHERE isprocessed = 1');
-
-			return view ('admin.GetAttendance')->with("results", $results)->with("results_2", $results_2);
+			return view ('admin.GetAttendance')->with("results", $results)->with("results_2", $results_2)->with('results_3', $results_3);
 		}
 		else {
 			//if not authenticated and not authorized

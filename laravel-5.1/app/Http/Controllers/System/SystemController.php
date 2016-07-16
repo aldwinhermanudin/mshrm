@@ -76,6 +76,7 @@ class SystemController extends Controller
 
 			  $validator = \Validator::make($input, [
 			    'nip' => 'required|max:128|unique:data_pegawai',
+					'uid' => 'required|max:128|unique:data_pegawai',
 			    'nama_lengkap' => 'required|max:512',
 			    'provinsi' => 'required',
 			    'kota' => 'required',
@@ -121,6 +122,7 @@ class SystemController extends Controller
 
 			    \DB::insert('INSERT INTO data_pegawai(
 			      nip,
+						uid,
 			      branch,
 			      nama_lengkap,
 			      tanggal_lahir,
@@ -166,8 +168,9 @@ class SystemController extends Controller
 			      tanggal_bergabung,
 			      created_at,
 			      updated_at
-			    ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+			    ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
 			      $input['nip'],
+						$input['uid'],
 			      $input['branch'],
 			      $input['nama_lengkap'],
 			      $input['tanggal_lahir'],
@@ -234,189 +237,196 @@ class SystemController extends Controller
 	public function PostEmployeeRegisterFile()
 	{
 		if ((\Auth::user()->superadmin) or (\Auth::user()->role_3)) {
-			if ((\Request::ajax()) && (\Request::hasFile('file_csv')) && (\Request::file('file_csv')->isValid())) {
-			  $file = \Request::file('file_csv');
+			if (\Request::ajax()) {
+				if ((\Request::hasFile('file_csv')) && (\Request::file('file_csv')->isValid())) {
+				  $file = \Request::file('file_csv');
 
-			  $validator = \Validator::make(
-			    [
-			      'file' => $file
-			    ],
-			    [
-			      'file' => 'required|mimes:csv,txt'
-			    ]
-			  );
+				  $validator = \Validator::make(
+				    [
+				      'file' => $file
+				    ],
+				    [
+				      'file' => 'required|mimes:csv,txt'
+				    ]
+				  );
 
-			  if ($validator->fails())
-			  {
-			    return view('ajax.Feedback')->withErrors($validator);
-			  }
-			  else
-			  {
-			    $date = new \DateTime;
+				  if ($validator->fails())
+				  {
+				    return view('ajax.Feedback')->withErrors($validator);
+				  }
+				  else
+				  {
+				    $date = new \DateTime;
 
-			    $csvData = file_get_contents($file);
-			    $lines = explode(PHP_EOL, $csvData);
-			    $array = array();
+				    $csvData = file_get_contents($file);
+				    $lines = explode(PHP_EOL, $csvData);
+				    $array = array();
 
-			    foreach ($lines as $line)
-			    {
-			      $array[] = str_getcsv($line);
-			    }
+				    foreach ($lines as $line)
+				    {
+				      $array[] = str_getcsv($line);
+				    }
 
-			    $failed_entry = '';
-			    $failed_count = 1;
-			    $failed_sum = 0;
-			    $accepted_count = 0;
+				    $failed_entry = '';
+				    $failed_count = 1;
+				    $failed_sum = 0;
+				    $accepted_count = 0;
 
-			    foreach ($array as $item)
-			    {
-			      if (isset($item[0]))
-			      {
+				    foreach ($array as $item)
+				    {
+				      if (isset($item[0]))
+				      {
 
-			        $validator = \Validator::make(
-			          [
-			            'nip' => $item[0],
-			            'nama_lengkap' => $item[1],
-			            'offset' => sizeof($item)
-			          ],
-			          [
-			            'nip' => 'required|unique:data_pegawai',
-			            'nama_lengkap' => 'required',
-			            'offset' => 'integer|size:45'
-			          ]
-			        );
+				        $validator = \Validator::make(
+				          [
+				            'nip' => $item[0],
+				            'nama_lengkap' => $item[1],
+				            'offset' => sizeof($item)
+				          ],
+				          [
+				            'nip' => 'required|unique:data_pegawai',
+				            'nama_lengkap' => 'required',
+				            'offset' => 'integer|size:45'
+				          ]
+				        );
 
-			        if ($validator->fails())
-			        {
-			          $failed_entry = $failed_entry.', '.$failed_count;
-			          $failed_sum = $failed_sum + 1;
-			        }
-			        else
-			        {
+				        if ($validator->fails())
+				        {
+				          $failed_entry = $failed_entry.', '.$failed_count;
+				          $failed_sum = $failed_sum + 1;
+				        }
+				        else
+				        {
 
-			          \DB::insert('INSERT INTO data_pegawai(
-			            nip,
-			            branch,
-			            supervisor,
-			            nama_lengkap,
-			            tanggal_lahir,
-			            jenis_kelamin,
-			            no_telp,
-			            no_hp,
-			            email,
-			            status_pernikahan,
-			            kewarganegaraan,
-			            no_ktp,
-			            alamat,
-			            provinsi,
-			            provinsi_nama,
-			            kota,
-			            kota_nama,
-			            kode_pos,
-			            suku,
-			            literasi_membaca,
-			            literasi_menulis,
-			            pendidikan,
-			            riwayat_penyakit,
-			            bpjs_kesehatan,
-			            bpjs_ketenagakerjaan,
-			            asurasi,
-			            jenis_jabatan,
-			            jenis_jabatan_nama,
-			            jenis_divisi,
-			            jenis_divisi_nama,
-			            nama_pasangan,
-			            jumlah_anak,
-			            nama_anak_1,
-			            nama_anak_2,
-			            nama_anak_3,
-			            nama_ibu,
-			            nama_ayah,
-			            kontak_keluarga_1,
-			            kontak_keluarga_2,
-			            instansi_terakhir,
-			            pangkat,
-			            jabatan,
-			            masa_kontrak_mulai,
-			            masa_kontrak_selesai,
-			            tanggal_bergabung,
-			            created_at,
-			            updated_at
-			          ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
-			              $item[0],
-			              $item[1],
-			              $item[2],
-			              $item[3],
-			              $item[4],
-			              $item[5],
-			              $item[6],
-			              $item[7],
-			              $item[8],
-			              $item[9],
-			              $item[10],
-			              $item[11],
-			              $item[12],
-			              $item[13],
-			              $item[14],
-			              $item[15],
-			              $item[16],
-			              $item[17],
-			              $item[18],
-			              $item[19],
-			              $item[20],
-			              $item[21],
-			              $item[22],
-			              $item[23],
-			              $item[24],
-			              $item[25],
-			              $item[26],
-			              $item[27],
-			              $item[28],
-			              $item[29],
-			              $item[30],
-			              $item[31],
-			              $item[32],
-			              $item[33],
-			              $item[34],
-			              $item[35],
-			              $item[36],
-			              $item[37],
-			              $item[38],
-			              $item[39],
-			              $item[40],
-			              $item[41],
-			              $item[42],
-			              $item[43],
-			              $item[44],
-			              $date,
-			              $date
-			          ]);
+				          \DB::insert('INSERT INTO data_pegawai(
+				            nip,
+										uid,
+				            branch,
+				            supervisor,
+				            nama_lengkap,
+				            tanggal_lahir,
+				            jenis_kelamin,
+				            no_telp,
+				            no_hp,
+				            email,
+				            status_pernikahan,
+				            kewarganegaraan,
+				            no_ktp,
+				            alamat,
+				            provinsi,
+				            provinsi_nama,
+				            kota,
+				            kota_nama,
+				            kode_pos,
+				            suku,
+				            literasi_membaca,
+				            literasi_menulis,
+				            pendidikan,
+				            riwayat_penyakit,
+				            bpjs_kesehatan,
+				            bpjs_ketenagakerjaan,
+				            asurasi,
+				            jenis_jabatan,
+				            jenis_jabatan_nama,
+				            jenis_divisi,
+				            jenis_divisi_nama,
+				            nama_pasangan,
+				            jumlah_anak,
+				            nama_anak_1,
+				            nama_anak_2,
+				            nama_anak_3,
+				            nama_ibu,
+				            nama_ayah,
+				            kontak_keluarga_1,
+				            kontak_keluarga_2,
+				            instansi_terakhir,
+				            pangkat,
+				            jabatan,
+				            masa_kontrak_mulai,
+				            masa_kontrak_selesai,
+				            tanggal_bergabung,
+				            created_at,
+				            updated_at
+				          ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+				              $item[0],
+				              $item[1],
+				              $item[2],
+				              $item[3],
+				              $item[4],
+				              $item[5],
+				              $item[6],
+				              $item[7],
+				              $item[8],
+				              $item[9],
+				              $item[10],
+				              $item[11],
+				              $item[12],
+				              $item[13],
+				              $item[14],
+				              $item[15],
+				              $item[16],
+				              $item[17],
+				              $item[18],
+				              $item[19],
+				              $item[20],
+				              $item[21],
+				              $item[22],
+				              $item[23],
+				              $item[24],
+				              $item[25],
+				              $item[26],
+				              $item[27],
+				              $item[28],
+				              $item[29],
+				              $item[30],
+				              $item[31],
+				              $item[32],
+				              $item[33],
+				              $item[34],
+				              $item[35],
+				              $item[36],
+				              $item[37],
+				              $item[38],
+				              $item[39],
+				              $item[40],
+				              $item[41],
+				              $item[42],
+				              $item[43],
+				              $item[44],
+											$item[45],
+				              $date,
+				              $date
+				          ]);
 
-			          $accepted_count = $accepted_count + 1;
-			        }
-			      }
+				          $accepted_count = $accepted_count + 1;
+				        }
+				      }
 
-			      $failed_count = $failed_count + 1;
-			    }
+				      $failed_count = $failed_count + 1;
+				    }
 
-			    if ($failed_sum > 0)
-			    {
-			      $failed_entry[0] = '';
-			      $failed_entry[1] = '';
-			      return '<div class="callout callout-warning"><ul>'.
-			      '<li>Total accepted: '.$accepted_count.
-			      '</li><li>Total rejected: '.$failed_sum.
-			      '</li><li>Rejected values: '.$failed_entry.'</li>'.'</ul></div>';
-			    }
-			    else
-			    {
-			      return 'OK';
-			    }
-			  }
+				    if ($failed_sum > 0)
+				    {
+				      $failed_entry[0] = '';
+				      $failed_entry[1] = '';
+				      return '<div class="callout callout-warning"><ul>'.
+				      '<li>Total accepted: '.$accepted_count.
+				      '</li><li>Total rejected: '.$failed_sum.
+				      '</li><li>Rejected values: '.$failed_entry.'</li>'.'</ul></div>';
+				    }
+				    else
+				    {
+				      return 'OK';
+				    }
+				  }
+				}
+				else {
+					return "<div class='callout callout-warning'><h5>File does not exists or is not valid. / File tidak valid atau ditemukan.</h5></div>";
+				}
 			}
 			else {
-			  //if not authenticated and not authorized
-			  $message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
+				//if request is not Ajax
+			  $message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
 			  return redirect ('/system/SystemNotification')->with('message', $message);
 			}
 		}

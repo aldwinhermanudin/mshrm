@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/skins/_all-skins.min.css') }}">
+
+
     <script src="{{ asset('/LTEAdmin/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
   </head>
   <body class="hold-transition skin-blue layout-boxed sidebar-mini">

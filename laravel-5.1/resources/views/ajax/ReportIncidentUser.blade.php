@@ -21,6 +21,10 @@
    <td>{{ $result->nip }}</td>
  </tr>
  <tr>
+   <td>UID</td>
+   <td>{{ $result->uid }}</td>
+ </tr>
+ <tr>
    <td>Nama Lengkap</td>
    <td>{{ $result->nama_lengkap }}</td>
  </tr>
@@ -49,6 +53,10 @@
  <tr>
    <td>NIP</td>
    <td>{{ $result->nip }}</td>
+ </tr>
+ <tr>
+   <td>UID</td>
+   <td>{{ $result->uid }}</td>
  </tr>
  <tr>
    <td>Full Name</td>
