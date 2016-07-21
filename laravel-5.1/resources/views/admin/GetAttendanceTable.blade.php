@@ -58,8 +58,8 @@
               echo '<th style="background-color: #EAC9ED;">S</th>';
             else if ($result->$day == 5)
               echo '<th style="background-color: #AFE4B0;">M</th>';
-            else if ($result->$day == 5)
-                echo '<th style="background-color: black;">-</th>';
+            else
+              echo '<th style="background-color: black;">-</th>';
             $day++;
           }
         ?>
@@ -85,7 +85,6 @@
       </tr>
     </tfoot>
   </table>
-
 
   <script src="{{ asset('/LTEAdmin/plugins/datatables/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>

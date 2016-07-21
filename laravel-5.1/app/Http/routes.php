@@ -105,3 +105,5 @@ Route::post('app/setting/lang', 'General\AppController@PostSettingLang');
 Route::get('admin/EmployeeAttendance', 'Admin\AttendanceController@GetEmployeeAttendance');
 Route::post('admin/EmployeeAttendance', 'Admin\AttendanceController@PostEmployeeAttendance');
 Route::post('admin/EmployeeAttendanceTimeSheet', 'Admin\AttendanceController@PostEmployeeAttendanceTimeSheet');
+Route::get('admin/EmployeeAttendanceUpdate', 'Admin\AttendanceController@GetEmployeeAttendanceUpdate');
+ROute::post('admin/EmployeeAttendanceRecord', 'Admin\AttendanceController@PostEmployeeAttendanceRecord');
