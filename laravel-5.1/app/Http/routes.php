@@ -85,10 +85,6 @@ Route::post('admin/ProcessBreak', 'Admin\AdminController@PostProcessBreak');
 //Item delete
 Route::post('admin/ItemDelete', 'Admin\AdminController@PostItemDelete');
 
-//attendance routes
-Route::get('admin/EmployeeAttendance', 'Admin\AdminController@GetEmployeeAttendance');
-Route::post('admin/EmployeeAttendance', 'Admin\AdminController@PostEmployeeAttendance');
-
 //Export routes
 Route::get('resources/export/xlsx/EmployeeList', 'System\ResourceController@GetEmployeeListXLSX');
 Route::get('resources/export/pdf/EmployeeList', 'System\ResourceController@GetEmployeeListPDF');
@@ -104,3 +100,8 @@ Route::get('resources/export/pdf/BreakList', 'System\ResourceController@GetBreak
 
 //APP ROUTES
 Route::post('app/setting/lang', 'General\AppController@PostSettingLang');
+
+//attendance routes
+Route::get('admin/EmployeeAttendance', 'Admin\AttendanceController@GetEmployeeAttendance');
+Route::post('admin/EmployeeAttendance', 'Admin\AttendanceController@PostEmployeeAttendance');
+Route::post('admin/EmployeeAttendanceTimeSheet', 'Admin\AttendanceController@PostEmployeeAttendanceTimeSheet');

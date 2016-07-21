@@ -98,6 +98,11 @@
                     </div>
 
                     <div class="form-group">
+                      <label>UID</label>
+                      <input type="text" class="form-control" id="form_1_uid" name="uid" placeholder="uid">
+                    </div>
+
+                    <div class="form-group">
                       <label>Cabang / Branch</label>
                       <select class="form-control" id="form_1_branch" name="branch" placeholder="branch">
                         @foreach ($results_3 as $result_3)
@@ -575,6 +580,11 @@ $(document).ready(function(){
                     <div class="form-group">
                       <label>NIP</label>
                       <input type="text" class="form-control" id="form_1_nip" name="nip" placeholder="nip">
+                    </div>
+
+                    <div class="form-group">
+                      <label>UID</label>
+                      <input type="text" class="form-control" id="form_1_uid" name="uid" placeholder="uid">
                     </div>
 
                     <div class="form-group">

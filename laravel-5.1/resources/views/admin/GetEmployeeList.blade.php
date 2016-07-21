@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.css') }}">
 <title>2016 mshrm ⋅ Daftar Pegawai</title>
 <input type="hidden" id="general_token" name="_token" value="{{ csrf_token() }}">
+<script src="{{ asset('/assets/bootbox/bootbox.min.js') }}"></script>
 
 <div class="content-wrapper">
   <section class="content-header">
@@ -40,6 +41,7 @@
           <thead>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Nama Lengkap</th>
               <th>Kota</th>
               <th>Posisi</th>
@@ -62,6 +64,7 @@
               <td>Kosong</td>
               <td>Kosong</td>
               <td>Kosong</td>
+              <td>Kosong</td>
             </tr>
             @else
             @foreach($results as $result)
@@ -73,6 +76,7 @@
             <tr id="content_{{ $result->nip }}">
             @endif
               <td>{{ $result->nip }}</td>
+              <td>{{ $result->uid }}</td>
               <td>{{ $result->nama_lengkap}}</td>
               <td>{{ $result->kota_nama }}</td>
               <td>{{ $result->jenis_jabatan_nama }}</td>
@@ -93,6 +97,7 @@
           <tfoot>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Nama Lengkap</th>
               <th>Kota</th>
               <th>Posisi</th>
@@ -332,6 +337,7 @@
 
 <script src="{{ asset('/LTEAdmin/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('/assets/bootbox/bootbox.min.js') }}"></script>
 <script>
   $(function () {
     $("#table_1").DataTable();
@@ -351,21 +357,40 @@
 
   function eraseUser(nip)
   {
-    $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
-    $.post("/admin/UserErase",
-    {
-      _token: $("#general_token").val(),
-      nip: nip,
-    },
-    function(data,status){
-      if (data == 'OK')
-      {
-        $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Dihapus.</h5></div>");
-        $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td>");
-      }
-      else
-      {
-        $("#page_feedback").empty().html(data);
+    bootbox.dialog({
+      message: "Anda yakin ingin menghapus item ini?",
+      buttons: {
+        cancel: {
+          label: "Batal",
+          className: "btn-primary",
+          callback: function() {
+            //blank
+          }
+        },
+        process: {
+          label: "Hapus",
+          className: "btn-danger",
+          callback: function() {
+            //callback process
+            $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+            $.post("/admin/UserErase",
+            {
+              _token: $("#general_token").val(),
+              nip: nip,
+            },
+            function(data,status){
+              if (data == 'OK')
+              {
+                $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Dihapus.</h5></div>");
+                $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td>");
+              }
+              else
+              {
+                $("#page_feedback").empty().html(data);
+              }
+            });
+          }
+        }
       }
     });
   }
@@ -387,24 +412,44 @@
   }
 
   function itemDelete(id, tname, code) {
-    console.log("delete id: " + id + ". in table " + tname);
-    $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
-    $.post("/admin/ItemDelete",
-    {
-      _token: $("#general_token").val(),
-      tname: tname,
-      id: id,
-      code: code,
-    },
-    function(data,status){
-      if (data == 'OK')
-      {
-        $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Dihapus.</h5></div>");
-        $("#delete_content_" + code + "_" + id).empty().text('DELETED');
-      }
-      else
-      {
-        $("#page_feedback").empty().html(data);
+    bootbox.dialog({
+      message: "Anda yakin ingin menghapus item ini?",
+      buttons: {
+        cancel: {
+          label: "Batal",
+          className: "btn-primary",
+          callback: function() {
+            //blank
+          }
+        },
+        process: {
+          label: "Hapus",
+          className: "btn-danger",
+          callback: function() {
+            //callback
+            console.log("delete id: " + id + ". in table " + tname);
+
+            $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+            $.post("/admin/ItemDelete",
+            {
+              _token: $("#general_token").val(),
+              tname: tname,
+              id: id,
+              code: code,
+            },
+            function(data,status){
+              if (data == 'OK')
+              {
+                $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Dihapus.</h5></div>");
+                $("#delete_content_" + code + "_" + id).empty().text('DELETED');
+              }
+              else
+              {
+                $("#page_feedback").empty().html(data);
+              }
+            });
+          }
+        }
       }
     });
   }
@@ -438,6 +483,7 @@
           <thead>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Full Name</th>
               <th>City</th>
               <th>Position</th>
@@ -460,6 +506,7 @@
               <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
+              <td>Empty</td>
             </tr>
             @else
             @foreach($results as $result)
@@ -471,6 +518,7 @@
             <tr id="content_{{ $result->nip }}">
             @endif
               <td>{{ $result->nip }}</td>
+              <td>{{ $result->uid }}</td>
               <td>{{ $result->nama_lengkap}}</td>
               <td>{{ $result->kota_nama }}</td>
               <td>{{ $result->jenis_jabatan_nama }}</td>
@@ -491,6 +539,7 @@
           <tfoot>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Full Name</th>
               <th>City</th>
               <th>Position</th>
@@ -730,6 +779,7 @@
 
 <script src="{{ asset('/LTEAdmin/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('/LTEAdmin/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('/assets/bootbox/bootbox.min.js') }}"></script>
 <script>
   $(function () {
     $("#table_1").DataTable();
@@ -749,21 +799,40 @@
 
   function eraseUser(nip)
   {
-    $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
-    $.post("/admin/UserErase",
-    {
-      _token: $("#general_token").val(),
-      nip: nip,
-    },
-    function(data,status){
-      if (data == 'OK')
-      {
-        $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
-        $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td>");
-      }
-      else
-      {
-        $("#page_feedback").empty().html(data);
+    bootbox.dialog({
+      message: "Are you sure want to delete this item?",
+      buttons: {
+        cancel: {
+          label: "Cancel",
+          className: "btn-primary",
+          callback: function() {
+            //blank
+          }
+        },
+        process: {
+          label: "Delete",
+          className: "btn-danger",
+          callback: function() {
+            //callback process
+            $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+            $.post("/admin/UserErase",
+            {
+              _token: $("#general_token").val(),
+              nip: nip,
+            },
+            function(data,status){
+              if (data == 'OK')
+              {
+                $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
+                $("#content_" + nip).empty().html("<td class='danger'>" + nip + "</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td><td class='danger'>Deleted</td>");
+              }
+              else
+              {
+                $("#page_feedback").empty().html(data);
+              }
+            });
+          }
+        }
       }
     });
   }
@@ -785,24 +854,41 @@
   }
 
   function itemDelete(id, tname, code) {
-    console.log("delete id: " + id + ". in table " + tname);
-    $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
-    $.post("/admin/ItemDelete",
-    {
-      _token: $("#general_token").val(),
-      tname: tname,
-      id: id,
-      code: code,
-    },
-    function(data,status){
-      if (data == 'OK')
-      {
-        $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
-        $("#delete_content_" + code + "_" + id).empty().text('DELETED');
-      }
-      else
-      {
-        $("#page_feedback").empty().html(data);
+    bootbox.dialog({
+      message: "Are you sure want to delete this item?",
+      buttons: {
+        cancel: {
+          label: "Cancel",
+          className: "btn-primary",
+          callback: function() {
+            //blank
+          }
+        },
+        process: {
+          label: "Delete",
+          className: "btn-danger",
+          callback: function() {
+            $("#page_feedback").empty().html("<div style='text-align:center;' class='overlay'><i class='fa fa-refresh fa-spin'></i></div><br>");
+            $.post("/admin/ItemDelete",
+            {
+              _token: $("#general_token").val(),
+              tname: tname,
+              id: id,
+              code: code,
+            },
+            function(data,status){
+              if (data == 'OK')
+              {
+                $("#page_feedback").empty().html("<div class='callout callout-success'><h5>Deleted.</h5></div>");
+                $("#delete_content_" + code + "_" + id).empty().text('DELETED');
+              }
+              else
+              {
+                $("#page_feedback").empty().html(data);
+              }
+            });
+          }
+        }
       }
     });
   }
