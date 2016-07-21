@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/skins/_all-skins.min.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('/assets/flags/css/flag-icon.css') }}">
 
     <script src="{{ asset('/LTEAdmin/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
   </head>
@@ -38,8 +39,8 @@
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-              <li><a id="set_language_english" href="#setLaguageEnglish">English</a></li>
-              <li><a id="set_language_indonesia" href="#setLaguageIndonesia"><em>Indonesia</em></a></li>
+              <li><a id="set_language_english" href="#setLaguageEnglish"><span class="flag-icon flag-icon-us"></span></a></li>
+              <li class="active"><a id="set_language_indonesia" href="#setLaguageIndonesia"><span class="flag-icon flag-icon-id"></span></a></li>
               <input type="hidden" id="app_token" name="_token" value="{{ csrf_token() }}">
 
               <li class="dropdown user user-menu">
@@ -221,6 +222,9 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/LTEAdmin/dist/css/skins/_all-skins.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('/assets/flags/css/flag-icon.css') }}">
+
     <script src="{{ asset('/LTEAdmin/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
   </head>
   <body class="hold-transition skin-blue layout-boxed sidebar-mini">
@@ -237,8 +241,8 @@
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-              <li><a id="set_language_english" href="#setLaguageEnglish"><em>English</em></a></li>
-              <li><a id="set_language_indonesia" href="#setLaguageIndonesia">Indonesia</a></li>
+              <li class="active"><a id="set_language_english" href="#setLaguageEnglish"><span class="flag-icon flag-icon-us"></span></a></li>
+              <li><a id="set_language_indonesia" href="#setLaguageIndonesia"><span class="flag-icon flag-icon-id"></span></a></li>
               <input type="hidden" id="app_token" name="_token" value="{{ csrf_token() }}">
 
               <li class="dropdown user user-menu">

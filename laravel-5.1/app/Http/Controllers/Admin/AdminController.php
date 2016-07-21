@@ -16,7 +16,7 @@ class AdminController extends Controller
 
   public function GetEmployeeList()
   {
-		$results = \DB::select('SELECT nip, branch, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pegawai');
+		$results = \DB::select('SELECT nip, uid, branch, nama_lengkap, jenis_kelamin, kota_nama, jenis_jabatan_nama, jenis_divisi_nama FROM data_pegawai');
 		$results_2 = \DB::select('SELECT id, nip, tipe, url, deskripsi, tempat_terjadi, waktu_terjadi, waktu_laporan, pelapor_akun FROM insiden_pegawai ORDER BY created_at DESC LIMIT 0,100');
 		$results_3 = \DB::select('SELECT id, nip, nama_penugasan, keterangan, catatan_kinerja, tanggal_mulai, tanggal_selesai FROM kinerja_pegawai ORDER BY created_at DESC LIMIT 0,100');
 		$results_4 = 'Content';
@@ -211,7 +211,8 @@ class AdminController extends Controller
 		if ((\Auth::user()->superadmin) or (\Auth::user()->role_5)) {
 
 			$results = \DB::select('SELECT nip, uid, nama_lengkap FROM data_pegawai');
-			return view('admin.GetReportIncident')->with('results', $results);
+			$results_2 = \DB::select('SELECT * FROM ms_lokasi');
+			return view('admin.GetReportIncident')->with('results', $results)->with('results_2', $results_2);
 		}
 		else {
 		  //if not authenticated and not authorized
@@ -610,54 +611,6 @@ class AdminController extends Controller
 				}
 				else {
 					return "<div class='callout callout-warning'><h5>Not deleted.</h5></div>";
-				}
-			}
-			else {
-				//if request is not Ajax
-				$message = "Ajax request only. / Hanya request Ajax yang diperbolehkan.";
-				return redirect ('/system/SystemNotification')->with('message', $message);
-			}
-		}
-		else {
-			//if not authenticated and not authorized
-			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
-			return redirect ('/system/SystemNotification')->with('message', $message);
-		}
-	}
-
-	public function GetEmployeeAttendance() {
-		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_11)) {
-			//code
-			\DB::update('UPDATE remote_database_1.work_log SET isread = 1 WHERE isprocessed = 1');
-			$results_3 = \DB::select('SELECT nip, uid, nama_lengkap FROM data_pegawai');
-			$results_2 = \DB::select('SELECT * FROM remote_database_1.work_log WHERE isprocessed = 1 AND isread = 1 ORDER BY timestamp DESC LIMIT 0,500');
-			\DB::update('UPDATE remote_database_1.work_log SET isprocessed = 1');
-			$results = \DB::select('SELECT * FROM remote_database_1.work_log WHERE isprocessed = 1 AND isread = 0 ORDER BY timestamp DESC');
-			return view ('admin.GetAttendance')->with("results", $results)->with("results_2", $results_2)->with('results_3', $results_3);
-		}
-		else {
-			//if not authenticated and not authorized
-			$message = "You are not authorized to use this function. / Anda tidak memiliki izin untuk mengakses fungsi ini.";
-			return redirect ('/system/SystemNotification')->with('message', $message);
-		}
-	}
-
-	public function PostEmployeeAttendance() {
-		if ((\Auth::user()->superadmin) OR (\Auth::user()->role_11)) {
-			if (\Request::ajax()) {
-
-				$input = \Request::all();
-
-				$validator = \Validator::make($input, [
-					'nip' => 'required|exists:data_pegawai,nip',
-				]);
-
-				if ($validator->fails()) {
-					return view('ajax.Feedback')->withErrors($validator);
-				}
-				else {
-					$result = \DB::insert('INSERT INTO remote_database_1.work_log (uid) VALUES (?)', [$input['nip']]);
-					return 'OK';
 				}
 			}
 			else {

@@ -80,17 +80,10 @@
 
                   <div class="form-group">
                     <label>Lokasi Kejadian</label>
-                    <input type="text" class="form-control" id="form_1_tempat_terjadi" name="tempat_terjadi" placeholder="incident location">
-                  </div>
-
-                  <div class="form-group">
-                    <label>Jenis Kejadian</label>
-                    <select class="form-control" id="form_1_tipe" name="tipe" placeholder="type">
-                      <option value="TERMINAL">TERMINAL</option>
-                      <option value="GORONG-GORONG">GORONG-GORONG</option>
-                      <option value="MULKI">TMULKI</option>
-                      <option value="RIDGE CAMPL">RIDGE CAMP</option>
-                      <option value="FAMILY SHOPPING">FAMILY SHOPPING</option>
+                    <select class="form-control" id="form_1_tempat_terjadi" name="tempat_terjadi" placeholder="incident location">
+                      @foreach ($results_2 as $result_2)
+                      <option value="{{ $result_2->nama_lokasi }}">{{ $result_2->nama_lokasi }}</option>
+                      @endforeach
                     </select>
                   </div>
 
@@ -277,7 +270,11 @@
 
                   <div class="form-group">
                     <label>Incident Location</label>
-                    <input type="text" class="form-control" id="form_1_tempat_terjadi" name="tempat_terjadi" placeholder="incident location">
+                    <select class="form-control"id="form_1_tempat_terjadi" name="tempat_terjadi" placeholder="incident location">
+                      @foreach ($results_2 as $result_2)
+                      <option value="{{ $result_2->nama_lokasi }}">{{ $result_2->nama_lokasi }}</option>
+                      @endforeach
+                    </select>
                   </div>
 
                   <div class="form-group">

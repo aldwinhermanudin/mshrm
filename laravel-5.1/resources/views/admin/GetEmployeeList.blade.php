@@ -41,6 +41,7 @@
           <thead>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Nama Lengkap</th>
               <th>Kota</th>
               <th>Posisi</th>
@@ -63,6 +64,7 @@
               <td>Kosong</td>
               <td>Kosong</td>
               <td>Kosong</td>
+              <td>Kosong</td>
             </tr>
             @else
             @foreach($results as $result)
@@ -74,6 +76,7 @@
             <tr id="content_{{ $result->nip }}">
             @endif
               <td>{{ $result->nip }}</td>
+              <td>{{ $result->uid }}</td>
               <td>{{ $result->nama_lengkap}}</td>
               <td>{{ $result->kota_nama }}</td>
               <td>{{ $result->jenis_jabatan_nama }}</td>
@@ -94,6 +97,7 @@
           <tfoot>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Nama Lengkap</th>
               <th>Kota</th>
               <th>Posisi</th>
@@ -479,6 +483,7 @@
           <thead>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Full Name</th>
               <th>City</th>
               <th>Position</th>
@@ -501,6 +506,7 @@
               <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
+              <td>Empty</td>
             </tr>
             @else
             @foreach($results as $result)
@@ -512,6 +518,7 @@
             <tr id="content_{{ $result->nip }}">
             @endif
               <td>{{ $result->nip }}</td>
+              <td>{{ $result->uid }}</td>
               <td>{{ $result->nama_lengkap}}</td>
               <td>{{ $result->kota_nama }}</td>
               <td>{{ $result->jenis_jabatan_nama }}</td>
@@ -532,6 +539,7 @@
           <tfoot>
             <tr>
               <th>NIP</th>
+              <th>UID</th>
               <th>Full Name</th>
               <th>City</th>
               <th>Position</th>
