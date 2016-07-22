@@ -218,6 +218,34 @@ class SystemController extends Controller
 			      $date
 			    ]);
 
+					//Updating devices
+					$arr = explode(' ',trim($input['nama_lengkap']));
+					$short_name = $arr[0];
+
+					\DB::insert('INSERT IGNORE INTO remote_database_1.employee_data (uid, name, short_name) VALUES (?,?,?)', [
+						$input['uid'],
+						$input['nama_lengkap'],
+						$short_name
+					]);
+
+					\DB::insert('INSERT IGNORE INTO remote_database_2.employee_data (uid, name, short_name) VALUES (?,?,?)', [
+						$input['uid'],
+						$input['nama_lengkap'],
+						$short_name
+					]);
+
+					\DB::insert('INSERT IGNORE INTO remote_database_3.employee_data (uid, name, short_name) VALUES (?,?,?)', [
+						$input['uid'],
+						$input['nama_lengkap'],
+						$short_name
+					]);
+
+					\DB::insert('INSERT IGNORE INTO remote_database_4.employee_data (uid, name, short_name) VALUES (?,?,?)', [
+						$input['uid'],
+						$input['nama_lengkap'],
+						$short_name
+					]);
+
 			    return 'OK';
 			  }
 			}
