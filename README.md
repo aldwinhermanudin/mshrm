@@ -1,2 +1,2 @@
 # mshrm
-Mitra siaga human resource manager
+Mushroom : A Fingerprint Attendance Device
